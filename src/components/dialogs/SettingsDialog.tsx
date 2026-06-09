@@ -301,9 +301,9 @@ export default function SettingsDialog() {
               </div>
               <div className="rounded-[14px] p-4 flex flex-col gap-2.5"
                 style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}>
-                <p className="text-[13px] font-semibold text-white/80">Import CSV shortcuts</p>
+                <p className="text-[13px] font-semibold text-white/80">{t(lang, 'importCsvShortcuts')}</p>
                 <p className="text-[11px]" style={{ color:'rgba(255,255,255,0.4)' }}>
-                  Append shortcuts from CSV into the active profile.
+                  {t(lang, 'importCsvDesc')}
                 </p>
                 <input type="file" accept=".csv,text/csv"
                   className="text-xs text-white/50 file:mr-3 file:rounded-xl file:border-0 file:px-3 file:py-1.5 file:text-white file:text-xs file:font-semibold file:cursor-pointer"
@@ -321,22 +321,22 @@ export default function SettingsDialog() {
                   }}
                 />
                 {importCsvError && <p className="text-xs text-red-400">⚠ {importCsvError}</p>}
-                {importCsvOk    && <p className="text-xs text-green-400">✓ CSV imported successfully!</p>}
+                {importCsvOk    && <p className="text-xs text-green-400">✓ {t(lang, 'importCsvSuccess')}</p>}
               </div>
               <div className="rounded-[14px] p-4 flex flex-col gap-2.5"
                 style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}>
-                <p className="text-[13px] font-semibold text-white/80">Analytics controls</p>
+                <p className="text-[13px] font-semibold text-white/80">{t(lang, 'analyticsControls')}</p>
                 <p className="text-[11px]" style={{ color:'rgba(255,255,255,0.4)' }}>
-                  Reset daily launch history and top-today stats without deleting shortcuts.
+                  {t(lang, 'analyticsResetDesc')}
                 </p>
                 <button
                   className="btn-danger w-fit text-xs"
                   onClick={() => {
-                    if (!confirm('Reset analytics history? This cannot be undone.')) return
+                    if (!confirm(t(lang, 'analyticsResetConfirm'))) return
                     resetAnalyticsData()
                   }}
                 >
-                  Reset analytics history
+                  {t(lang, 'analyticsResetAction')}
                 </button>
               </div>
             </>}

@@ -81,14 +81,14 @@ export default function StatsBar() {
     },
     {
       icon: '📈',
-      label: '7-day activity',
-      value: `${todayLaunches} today`,
-      sub: activeDays > 0 ? `${activeDays}/7 active days` : t(lang, 'noActivity'),
+      label: t(lang, 'activity7d'),
+      value: `${todayLaunches} ${t(lang, 'today')}`,
+      sub: activeDays > 0 ? `${activeDays}/7 ${t(lang, 'activeDays')}` : t(lang, 'noActivity'),
       spark: last7Values,
     },
     {
       icon: '🔥',
-      label: 'Top today',
+      label: t(lang, 'topToday'),
       value: topTodayShortcut?.name ?? '—',
       sub: topTodayEntry ? `${topTodayEntry[1]} ${t(lang, 'launches')}` : t(lang, 'notTracked'),
       spark: null,
@@ -96,11 +96,11 @@ export default function StatsBar() {
   ]
 
   return (
-    <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))' }}>
+    <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))' }}>
       {stats.map((st, i) => (
         <div
           key={st.label}
-          className="stat-card rounded-[18px] px-4 py-3.5 animate-rise"
+          className="stat-card rounded-[18px] px-4 py-3.5 min-h-[96px] animate-rise"
           style={{ animationDelay: `${i * 55}ms` }}
         >
           <div className="flex items-start justify-between gap-2">

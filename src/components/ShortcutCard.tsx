@@ -3,6 +3,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useStore } from '../store/useStore'
 import { getFavicon, isValidUrl, normalizeUrl } from '../utils/helpers'
+import { t } from '../utils/i18n'
 import type { Shortcut } from '../types'
 
 interface Props { shortcut: Shortcut }
@@ -20,6 +21,7 @@ export default function ShortcutCard({ shortcut }: Props) {
   const openDialog     = useStore((s) => s.openDialog)
   const openView       = useStore((s) => s.openView)
   const [imgLoaded, setImgLoaded] = useState(false)
+  const lang = settings.language ?? 'en'
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: shortcut.id, disabled: !settings.editMode })
@@ -32,6 +34,7 @@ export default function ShortcutCard({ shortcut }: Props) {
 
   const iconSz = { compact: 'w-8 h-8', comfortable: 'w-10 h-10', large: 'w-12 h-12' }[settings.tileSize] ?? 'w-10 h-10'
   const pad    = { compact: 'px-2 pt-3.5 pb-2.5', comfortable: 'px-3 pt-4 pb-3', large: 'px-3 pt-5 pb-4' }[settings.tileSize] ?? 'px-3 pt-4 pb-3'
+  const minH   = { compact: 'min-h-[112px]', comfortable: 'min-h-[142px]', large: 'min-h-[172px]' }[settings.tileSize] ?? 'min-h-[142px]'
 
   function go() {
     const url = normalizeUrl(shortcut.url)
@@ -45,6 +48,13 @@ export default function ShortcutCard({ shortcut }: Props) {
     return (e: React.MouseEvent) => { e.stopPropagation(); fn() }
   }
 
+  function onCardKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      go()
+    }
+  }
+
   return (
     <article
       ref={setNodeRef}
@@ -56,10 +66,13 @@ export default function ShortcutCard({ shortcut }: Props) {
       }}
       {...attributes}
       {...(settings.editMode ? listeners : {})}
-      className={`shortcut-card group rounded-[var(--radius-card)] ${pad}
+      className={`shortcut-card group rounded-[var(--radius-card)] ${pad} ${minH}
         text-center cursor-pointer select-none overflow-hidden
         ${isDragging ? 'is-dragging' : ''}`}
       onClick={go}
+      onKeyDown={onCardKeyDown}
+      tabIndex={0}
+      role="button"
       title={shortcut.description || shortcut.url}
     >
       {/* ambient icon ring */}
@@ -117,14 +130,14 @@ export default function ShortcutCard({ shortcut }: Props) {
       {settings.tileSize === 'large' && shortcut.clicks > 0 && (
         <span className="relative z-10 mt-1 block text-[10px] font-semibold"
           style={{ color: 'var(--accent)' }}>
-          {shortcut.clicks} launches
+          {shortcut.clicks} {t(lang, 'launches')}
         </span>
       )}
 
       {/* Action bar — slides up on hover */}
       <div className="card-actions" onClick={(e) => e.stopPropagation()}>
         {/* View */}
-        <ActionBtn onClick={stop(() => openView(shortcut))} title="View details">
+        <ActionBtn onClick={stop(() => openView(shortcut))} title={t(lang, 'view')}>
           <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -143,7 +156,7 @@ export default function ShortcutCard({ shortcut }: Props) {
 
         {/* Edit */}
         {settings.editMode && (
-          <ActionBtn onClick={stop(() => openDialog('edit-shortcut', shortcut))} title="Edit">
+          <ActionBtn onClick={stop(() => openDialog('edit-shortcut', shortcut))} title={t(lang, 'edit')}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
@@ -154,10 +167,11 @@ export default function ShortcutCard({ shortcut }: Props) {
         {settings.editMode && (
           <ActionBtn
             onClick={stop(() => {
-              if (settings.confirmDelete && !confirm(`Delete "${shortcut.name}"?`)) return
+              const confirmText = t(lang, 'deleteConfirm').replace('{name}', shortcut.name)
+              if (settings.confirmDelete && !confirm(confirmText)) return
               deleteShortcut(shortcut.id)
             })}
-            title="Delete"
+            title={t(lang, 'delete')}
             danger
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -183,7 +197,7 @@ function ActionBtn({
     <button
       onClick={onClick}
       title={title}
-      className="flex h-6 w-6 items-center justify-center rounded-lg transition-colors"
+      className="flex h-7 w-7 items-center justify-center rounded-lg transition-colors"
       style={{
         background: danger
           ? 'rgba(239,68,68,0.8)'
@@ -197,6 +211,7 @@ function ActionBtn({
             : 'rgba(255,255,255,0.14)'}`,
         color: accent ? 'var(--accent)' : 'rgba(255,255,255,0.85)',
       }}
+      aria-label={title}
     >
       {children}
     </button>

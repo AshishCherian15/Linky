@@ -28,6 +28,10 @@ type TranslationKeys = {
   totalLaunches: string
   topGroup: string
   noActivity: string
+  activity7d: string
+  today: string
+  activeDays: string
+  topToday: string
   // Grid
   pinned_section: string
   noShortcutsYet: string
@@ -40,6 +44,7 @@ type TranslationKeys = {
   unpin: string
   edit: string
   delete: string
+  deleteConfirm: string
   // Dialogs — general
   cancel: string
   save: string
@@ -103,6 +108,13 @@ type TranslationKeys = {
   importBackup: string
   importDesc: string
   importSuccess: string
+  importCsvShortcuts: string
+  importCsvDesc: string
+  importCsvSuccess: string
+  analyticsControls: string
+  analyticsResetDesc: string
+  analyticsResetAction: string
+  analyticsResetConfirm: string
   resetDefaults: string
   resetConfirm: string
   // Background
@@ -142,6 +154,13 @@ type TranslationKeys = {
   letsGo: string
   addPhotoLater: string
   uploadYourPhoto: string
+  // App shell
+  tipSearch: string
+  tipAdd: string
+  tipDrag: string
+  tipHover: string
+  addShortcutHotkey: string
+  footerTagline: string
 }
 
 const translations: Record<AppLanguage, TranslationKeys> = {
@@ -169,6 +188,10 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     totalLaunches: 'Total launches',
     topGroup: 'Top group',
     noActivity: 'Start clicking to track',
+    activity7d: '7-day activity',
+    today: 'today',
+    activeDays: 'active days',
+    topToday: 'Top today',
     pinned_section: 'Pinned',
     noShortcutsYet: 'Your hub awaits',
     addFirst: 'Add your first shortcut to get started',
@@ -179,6 +202,7 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     unpin: 'Unpin',
     edit: 'Edit',
     delete: 'Delete',
+    deleteConfirm: 'Delete "{name}"?',
     cancel: 'Cancel',
     save: 'Save',
     done: 'Done',
@@ -238,6 +262,13 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     importBackup: 'Import backup',
     importDesc: 'Restore from a previously exported Linky file.',
     importSuccess: 'Imported successfully!',
+    importCsvShortcuts: 'Import CSV shortcuts',
+    importCsvDesc: 'Append shortcuts from CSV into the active profile.',
+    importCsvSuccess: 'CSV imported successfully!',
+    analyticsControls: 'Analytics controls',
+    analyticsResetDesc: 'Reset daily launch history and top-today stats without deleting shortcuts.',
+    analyticsResetAction: 'Reset analytics history',
+    analyticsResetConfirm: 'Reset analytics history? This cannot be undone.',
     resetDefaults: 'Reset Defaults',
     resetConfirm: 'Reset all settings to defaults? Shortcuts are kept.',
     backgroundTitle: 'Background',
@@ -274,6 +305,12 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     letsGo: "Let's go →",
     addPhotoLater: 'You can add a profile photo later from Profiles.',
     uploadYourPhoto: 'Upload your photo',
+    tipSearch: 'search',
+    tipAdd: 'add shortcut',
+    tipDrag: 'reorder',
+    tipHover: 'edit card',
+    addShortcutHotkey: 'Add shortcut [n]',
+    footerTagline: 'Linky - your personal shortcut hub',
   },
 
   hi: {
@@ -300,6 +337,10 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     totalLaunches: 'कुल लॉन्च',
     topGroup: 'शीर्ष समूह',
     noActivity: 'ट्रैक करने के लिए क्लिक करें',
+    activity7d: '7-दिन गतिविधि',
+    today: 'आज',
+    activeDays: 'सक्रिय दिन',
+    topToday: 'आज का शीर्ष',
     pinned_section: 'पिन किए गए',
     noShortcutsYet: 'आपका हब इंतज़ार कर रहा है',
     addFirst: 'शुरू करने के लिए अपना पहला शॉर्टकट जोड़ें',
@@ -310,6 +351,7 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     unpin: 'अनपिन करें',
     edit: 'संपादित करें',
     delete: 'हटाएं',
+    deleteConfirm: '"{name}" हटाएं?',
     cancel: 'रद्द करें',
     save: 'सहेजें',
     done: 'हो गया',
@@ -369,6 +411,13 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     importBackup: 'बैकअप आयात करें',
     importDesc: 'पहले निर्यात की गई Linky फ़ाइल से पुनर्स्थापित करें।',
     importSuccess: 'सफलतापूर्वक आयात किया!',
+    importCsvShortcuts: 'CSV शॉर्टकट आयात करें',
+    importCsvDesc: 'सक्रिय प्रोफ़ाइल में CSV से शॉर्टकट जोड़ें।',
+    importCsvSuccess: 'CSV सफलतापूर्वक आयात हुआ!',
+    analyticsControls: 'एनालिटिक्स नियंत्रण',
+    analyticsResetDesc: 'शॉर्टकट हटाए बिना दैनिक इतिहास और आज के शीर्ष आंकड़े रीसेट करें।',
+    analyticsResetAction: 'एनालिटिक्स इतिहास रीसेट करें',
+    analyticsResetConfirm: 'एनालिटिक्स इतिहास रीसेट करें? इसे वापस नहीं किया जा सकता।',
     resetDefaults: 'डिफ़ॉल्ट रीसेट करें',
     resetConfirm: 'सभी सेटिंग्स रीसेट करें? शॉर्टकट सुरक्षित रहेंगे।',
     backgroundTitle: 'पृष्ठभूमि',
@@ -405,6 +454,12 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     letsGo: 'चलें →',
     addPhotoLater: 'आप बाद में प्रोफ़ाइल से फोटो जोड़ सकते हैं।',
     uploadYourPhoto: 'अपनी फोटो अपलोड करें',
+    tipSearch: 'खोज',
+    tipAdd: 'शॉर्टकट जोड़ें',
+    tipDrag: 'पुनः क्रमित करें',
+    tipHover: 'कार्ड संपादित करें',
+    addShortcutHotkey: 'शॉर्टकट जोड़ें [n]',
+    footerTagline: 'Linky - आपका व्यक्तिगत शॉर्टकट हब',
   },
 
   es: {
@@ -431,6 +486,10 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     totalLaunches: 'Total de aperturas',
     topGroup: 'Grupo principal',
     noActivity: 'Haz clic para rastrear',
+    activity7d: 'Actividad de 7 dias',
+    today: 'hoy',
+    activeDays: 'dias activos',
+    topToday: 'Top de hoy',
     pinned_section: 'Fijados',
     noShortcutsYet: 'Tu hub te espera',
     addFirst: 'Agrega tu primer acceso para comenzar',
@@ -441,6 +500,7 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     unpin: 'Desfijar',
     edit: 'Editar',
     delete: 'Eliminar',
+    deleteConfirm: '¿Eliminar "{name}"?',
     cancel: 'Cancelar',
     save: 'Guardar',
     done: 'Listo',
@@ -500,6 +560,13 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     importBackup: 'Importar respaldo',
     importDesc: 'Restaurar desde un archivo Linky exportado.',
     importSuccess: '¡Importado exitosamente!',
+    importCsvShortcuts: 'Importar accesos CSV',
+    importCsvDesc: 'Agrega accesos desde CSV al perfil activo.',
+    importCsvSuccess: '¡CSV importado con exito!',
+    analyticsControls: 'Controles de analitica',
+    analyticsResetDesc: 'Restablece historial diario y top de hoy sin borrar accesos.',
+    analyticsResetAction: 'Restablecer historial analitico',
+    analyticsResetConfirm: '¿Restablecer historial analitico? No se puede deshacer.',
     resetDefaults: 'Restablecer valores',
     resetConfirm: '¿Restablecer todos los ajustes? Los accesos se conservan.',
     backgroundTitle: 'Fondo',
@@ -536,6 +603,12 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     letsGo: 'Vamos →',
     addPhotoLater: 'Puedes agregar una foto desde Perfiles.',
     uploadYourPhoto: 'Sube tu foto',
+    tipSearch: 'buscar',
+    tipAdd: 'agregar acceso',
+    tipDrag: 'reordenar',
+    tipHover: 'editar tarjeta',
+    addShortcutHotkey: 'Agregar acceso [n]',
+    footerTagline: 'Linky - tu centro personal de accesos',
   },
 
   fr: {
@@ -562,6 +635,10 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     totalLaunches: 'Ouvertures totales',
     topGroup: 'Groupe principal',
     noActivity: 'Cliquez pour suivre',
+    activity7d: 'Activite sur 7 jours',
+    today: "aujourd'hui",
+    activeDays: 'jours actifs',
+    topToday: "Top d'aujourd'hui",
     pinned_section: 'Épinglés',
     noShortcutsYet: 'Votre hub vous attend',
     addFirst: 'Ajoutez votre premier raccourci',
@@ -572,6 +649,7 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     unpin: 'Désépingler',
     edit: 'Modifier',
     delete: 'Supprimer',
+    deleteConfirm: 'Supprimer "{name}" ?',
     cancel: 'Annuler',
     save: 'Sauvegarder',
     done: 'Terminé',
@@ -631,6 +709,13 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     importBackup: 'Importer sauvegarde',
     importDesc: 'Restaurer depuis un fichier Linky exporté.',
     importSuccess: 'Importé avec succès !',
+    importCsvShortcuts: 'Importer des raccourcis CSV',
+    importCsvDesc: 'Ajoutez des raccourcis CSV au profil actif.',
+    importCsvSuccess: 'CSV importe avec succes !',
+    analyticsControls: 'Controles analytiques',
+    analyticsResetDesc: 'Reinitialisez l historique quotidien et le top du jour sans supprimer les raccourcis.',
+    analyticsResetAction: 'Reinitialiser l historique analytique',
+    analyticsResetConfirm: 'Reinitialiser l historique analytique ? Cette action est irreversible.',
     resetDefaults: 'Réinitialiser',
     resetConfirm: 'Réinitialiser tous les paramètres ? Les raccourcis sont conservés.',
     backgroundTitle: "Arrière-plan",
@@ -667,6 +752,12 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     letsGo: 'Allons-y →',
     addPhotoLater: 'Vous pouvez ajouter une photo depuis Profils.',
     uploadYourPhoto: 'Téléversez votre photo',
+    tipSearch: 'rechercher',
+    tipAdd: 'ajouter raccourci',
+    tipDrag: 'reordonner',
+    tipHover: 'editer carte',
+    addShortcutHotkey: 'Ajouter raccourci [n]',
+    footerTagline: 'Linky - votre hub personnel de raccourcis',
   },
 
   ar: {
@@ -693,6 +784,10 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     totalLaunches: 'إجمالي الفتحات',
     topGroup: 'أهم مجموعة',
     noActivity: 'انقر للتتبع',
+    activity7d: 'نشاط 7 أيام',
+    today: 'اليوم',
+    activeDays: 'أيام نشطة',
+    topToday: 'الأعلى اليوم',
     pinned_section: 'المثبتة',
     noShortcutsYet: 'مركزك في انتظارك',
     addFirst: 'أضف اختصارك الأول للبدء',
@@ -703,6 +798,7 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     unpin: 'إلغاء التثبيت',
     edit: 'تعديل',
     delete: 'حذف',
+    deleteConfirm: 'حذف "{name}"؟',
     cancel: 'إلغاء',
     save: 'حفظ',
     done: 'تم',
@@ -762,6 +858,13 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     importBackup: 'استيراد نسخة احتياطية',
     importDesc: 'استعادة من ملف Linky مُصدَّر سابقاً.',
     importSuccess: 'تم الاستيراد بنجاح!',
+    importCsvShortcuts: 'استيراد اختصارات CSV',
+    importCsvDesc: 'أضف اختصارات من CSV إلى الملف الشخصي النشط.',
+    importCsvSuccess: 'تم استيراد CSV بنجاح!',
+    analyticsControls: 'عناصر تحكم التحليلات',
+    analyticsResetDesc: 'أعد ضبط السجل اليومي وإحصاءات الأعلى اليوم دون حذف الاختصارات.',
+    analyticsResetAction: 'إعادة ضبط سجل التحليلات',
+    analyticsResetConfirm: 'إعادة ضبط سجل التحليلات؟ لا يمكن التراجع عن هذا.',
     resetDefaults: 'إعادة الضبط الافتراضي',
     resetConfirm: 'إعادة ضبط الإعدادات؟ الاختصارات محفوظة.',
     backgroundTitle: 'الخلفية',
@@ -798,6 +901,12 @@ const translations: Record<AppLanguage, TranslationKeys> = {
     letsGo: 'هيا بنا ←',
     addPhotoLater: 'يمكنك إضافة صورة لاحقاً من الملفات الشخصية.',
     uploadYourPhoto: 'ارفع صورتك',
+    tipSearch: 'بحث',
+    tipAdd: 'إضافة اختصار',
+    tipDrag: 'إعادة ترتيب',
+    tipHover: 'تعديل البطاقة',
+    addShortcutHotkey: 'إضافة اختصار [n]',
+    footerTagline: 'Linky - مركز الاختصارات الشخصي الخاص بك',
   },
 }
 

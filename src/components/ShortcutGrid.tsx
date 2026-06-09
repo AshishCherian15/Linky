@@ -59,9 +59,9 @@ export default function ShortcutGrid() {
   }
 
   const grid = {
-    compact:     'grid-cols-[repeat(auto-fill,minmax(88px,1fr))]',
-    comfortable: 'grid-cols-[repeat(auto-fill,minmax(118px,1fr))]',
-    large:       'grid-cols-[repeat(auto-fill,minmax(148px,1fr))]',
+    compact:     'grid-cols-[repeat(auto-fill,minmax(96px,1fr))]',
+    comfortable: 'grid-cols-[repeat(auto-fill,minmax(132px,1fr))]',
+    large:       'grid-cols-[repeat(auto-fill,minmax(170px,1fr))]',
   }[settings.tileSize]
 
   /* ── Empty state ── */
@@ -96,7 +96,8 @@ export default function ShortcutGrid() {
 
   function Section({ title, items, delay }: { title: string; items: Shortcut[]; delay: number }) {
     const isCollapsed = !!collapsed[title]
-    const h = isCollapsed ? 0 : items.length * 200
+    const rowHeight = settings.tileSize === 'compact' ? 132 : settings.tileSize === 'large' ? 206 : 168
+    const h = isCollapsed ? 0 : items.length * rowHeight
     return (
       <section
         className="group-section p-4 animate-rise"
@@ -129,7 +130,7 @@ export default function ShortcutGrid() {
           style={{ maxHeight: isCollapsed ? 0 : `${h}px` }}
         >
           <SortableContext items={items.map((s) => s.id)} strategy={rectSortingStrategy}>
-            <div className={`grid ${grid} gap-2.5`}>
+            <div className={`grid ${grid} gap-3`}>
               {items.map((s, i) => (
                 <div key={s.id} className="animate-riseStagger" style={{ animationDelay: `${i * 22}ms` }}>
                   <ShortcutCard shortcut={s} />
@@ -159,7 +160,7 @@ export default function ShortcutGrid() {
                 <span className="chip-accent">{pinned.length}</span>
               </div>
               <SortableContext items={pinned.map((s) => s.id)} strategy={rectSortingStrategy}>
-                <div className={`grid ${grid} gap-2.5`}>
+                <div className={`grid ${grid} gap-3`}>
                   {pinned.map((s, i) => (
                     <div key={s.id} className="animate-riseStagger" style={{ animationDelay: `${i * 25}ms` }}>
                       <ShortcutCard shortcut={s} />
@@ -179,7 +180,7 @@ export default function ShortcutGrid() {
 
       {/* FAB — visible when edit mode on */}
       {settings.editMode && (
-        <button className="fab" onClick={() => openDialog('add-shortcut')} title="Add shortcut [n]">
+        <button className="fab" onClick={() => openDialog('add-shortcut')} title={t(lang, 'addShortcutHotkey')}>
           +
         </button>
       )}

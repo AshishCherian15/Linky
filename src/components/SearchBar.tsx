@@ -47,7 +47,7 @@ export default function SearchBar() {
   const icon = ENGINE_ICONS[settings.searchEngine] ?? '?'
 
   return (
-    <div className="glass search-wrap rounded-[20px] px-4 py-3 transition-all duration-200">
+    <div className="glass ring-accent search-wrap rounded-[20px] px-4 py-3 transition-all duration-200">
       <div className="flex items-center gap-3">
 
         {/* Search icon */}
@@ -76,10 +76,7 @@ export default function SearchBar() {
           {searchQuery && (
             <button
               onClick={() => { setSearch(''); inputRef.current?.focus() }}
-              className="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold transition-colors"
-              style={{ background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.55)' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+              className="search-clear flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold"
               aria-label="Clear"
             >
               ×

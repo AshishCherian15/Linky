@@ -14,6 +14,7 @@ import BackgroundDialog     from './components/dialogs/BackgroundDialog'
 import SettingsDialog       from './components/dialogs/SettingsDialog'
 import ProfileManagerDialog from './components/dialogs/ProfileManagerDialog'
 import ShortcutViewDialog   from './components/dialogs/ShortcutViewDialog'
+import { t } from './utils/i18n'
 
 export default function App() {
   const accent     = useStore((s) => s.settings.accent)
@@ -52,8 +53,12 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [openDialog])
 
+  const lang = language ?? 'en'
   const tips = [
-    ['/','search'], ['n','add shortcut'], ['drag','reorder'], ['hover','edit card'],
+    ['/', t(lang, 'tipSearch')],
+    ['n', t(lang, 'tipAdd')],
+    ['drag', t(lang, 'tipDrag')],
+    ['hover', t(lang, 'tipHover')],
   ] as const
 
   return (
@@ -66,12 +71,12 @@ export default function App() {
       <Background />
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        <div className="flex-1 mx-auto w-full max-w-[1440px] px-4 pt-3 pb-8 flex flex-col gap-4">
+        <div className="flex-1 mx-auto w-full max-w-[1520px] px-3 sm:px-4 lg:px-6 pt-3 pb-8 flex flex-col gap-4 lg:gap-5">
 
           <AppBar />
 
           {/* Hero row: search + clock */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch lg:gap-4">
             <div className="flex-1"><SearchBar /></div>
             <Clock />
           </div>
@@ -96,7 +101,7 @@ export default function App() {
         {showFooter && (
           <footer className="pb-4 text-center text-[10px] tracking-[0.18em] uppercase select-none"
             style={{ color: 'rgba(255,255,255,0.15)' }}>
-            Linky — your personal shortcut hub
+            {t(lang, 'footerTagline')}
           </footer>
         )}
       </div>
