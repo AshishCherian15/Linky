@@ -1,0 +1,814 @@
+import type { AppLanguage } from '../types'
+
+type TranslationKeys = {
+  // AppBar
+  shortcutHub: string
+  addShortcut: string
+  background: string
+  profiles: string
+  settings: string
+  lockLayout: string
+  unlockToEdit: string
+  // Search
+  searchPlaceholder: string
+  // Clock
+  goodMorning: string
+  goodAfternoon: string
+  goodEvening: string
+  ofDay: string
+  // Stats
+  welcomeBack: string
+  shortcutsReady: string
+  library: string
+  groups: string
+  pinned: string
+  mostClicked: string
+  launches: string
+  notTracked: string
+  totalLaunches: string
+  topGroup: string
+  noActivity: string
+  // Grid
+  pinned_section: string
+  noShortcutsYet: string
+  addFirst: string
+  noMatch: string
+  pressEnterSearch: string
+  // Card actions
+  view: string
+  pin: string
+  unpin: string
+  edit: string
+  delete: string
+  // Dialogs — general
+  cancel: string
+  save: string
+  done: string
+  close: string
+  apply: string
+  reset: string
+  // Shortcut dialog
+  newShortcut: string
+  editShortcut: string
+  quickAdd: string
+  name: string
+  url: string
+  group: string
+  description: string
+  customIconUrl: string
+  optional: string
+  shownInView: string
+  addShortcutBtn: string
+  saveChanges: string
+  // View dialog
+  openSite: string
+  addedOn: string
+  // Settings
+  settingsTitle: string
+  appearance: string
+  behavior: string
+  audio: string
+  profile: string
+  data: string
+  language: string
+  accentColor: string
+  cardStyle: string
+  tileSize: string
+  showClock: string
+  showStats: string
+  showFooter: string
+  showTips: string
+  openLinks: string
+  newTab: string
+  sameTab: string
+  editMode: string
+  allowDrag: string
+  confirmDelete: string
+  groupSort: string
+  sortAZ: string
+  sortManual: string
+  sortMostUsed: string
+  searchEngine: string
+  bgAudio: string
+  mutedDefault: string
+  volume: string
+  displayName: string
+  profilePhoto: string
+  uploadPhoto: string
+  removePhoto: string
+  exportBackup: string
+  exportDesc: string
+  exportJson: string
+  exportCsv: string
+  importBackup: string
+  importDesc: string
+  importSuccess: string
+  resetDefaults: string
+  resetConfirm: string
+  // Background
+  backgroundTitle: string
+  quickPresets: string
+  orPasteUrl: string
+  typeLabel: string
+  autoDetect: string
+  uploadFile: string
+  uploadWarning: string
+  resetDefault: string
+  solidGradient: string
+  solidColor: string
+  gradientFrom: string
+  gradientTo: string
+  gradientAngle: string
+  previewBg: string
+  // Profiles
+  profilesTitle: string
+  profilesDesc: string
+  newProfile: string
+  profileName: string
+  active: string
+  shortcuts_count: string
+  rename: string
+  // Welcome
+  welcomeTitle: string
+  welcomeSub: string
+  oneClickLaunch: string
+  oneClickDesc: string
+  smartGroups: string
+  smartGroupsDesc: string
+  fullControl: string
+  fullControlDesc: string
+  whatToCall: string
+  yourName: string
+  letsGo: string
+  addPhotoLater: string
+  uploadYourPhoto: string
+}
+
+const translations: Record<AppLanguage, TranslationKeys> = {
+  en: {
+    shortcutHub: 'shortcut hub',
+    addShortcut: 'Add shortcut',
+    background: 'Background',
+    profiles: 'Profiles',
+    settings: 'Settings',
+    lockLayout: 'Lock layout',
+    unlockToEdit: 'Unlock to edit',
+    searchPlaceholder: 'Search shortcuts or press Enter to search the web…',
+    goodMorning: 'Good morning',
+    goodAfternoon: 'Good afternoon',
+    goodEvening: 'Good evening',
+    ofDay: 'of day',
+    welcomeBack: 'Welcome back',
+    shortcutsReady: 'shortcuts ready',
+    library: 'Library',
+    groups: 'groups',
+    pinned: 'pinned',
+    mostClicked: 'Most clicked',
+    launches: 'launches',
+    notTracked: 'Not tracked yet',
+    totalLaunches: 'Total launches',
+    topGroup: 'Top group',
+    noActivity: 'Start clicking to track',
+    pinned_section: 'Pinned',
+    noShortcutsYet: 'Your hub awaits',
+    addFirst: 'Add your first shortcut to get started',
+    noMatch: 'No match for',
+    pressEnterSearch: 'Press Enter to search the web',
+    view: 'View details',
+    pin: 'Pin',
+    unpin: 'Unpin',
+    edit: 'Edit',
+    delete: 'Delete',
+    cancel: 'Cancel',
+    save: 'Save',
+    done: 'Done',
+    close: 'Close',
+    apply: 'Apply',
+    reset: 'Reset',
+    newShortcut: 'New Shortcut',
+    editShortcut: 'Edit Shortcut',
+    quickAdd: 'Quick add',
+    name: 'Name',
+    url: 'URL',
+    group: 'Group',
+    description: 'Description',
+    customIconUrl: 'Custom icon URL',
+    optional: 'optional',
+    shownInView: 'shown in View panel',
+    addShortcutBtn: 'Add shortcut',
+    saveChanges: 'Save changes',
+    openSite: 'Open site',
+    addedOn: 'Added',
+    settingsTitle: 'Settings',
+    appearance: 'Appearance',
+    behavior: 'Behavior',
+    audio: 'Audio',
+    profile: 'Profile',
+    data: 'Data',
+    language: 'Language',
+    accentColor: 'Accent color',
+    cardStyle: 'Card style',
+    tileSize: 'Tile size',
+    showClock: 'Show clock',
+    showStats: 'Show stats',
+    showFooter: 'Show footer',
+    showTips: 'Show tips',
+    openLinks: 'Open links',
+    newTab: 'New tab',
+    sameTab: 'Same tab',
+    editMode: 'Edit mode',
+    allowDrag: 'Allow drag-drop & card actions',
+    confirmDelete: 'Confirm delete',
+    groupSort: 'Group sort',
+    sortAZ: 'A → Z',
+    sortManual: 'Manual',
+    sortMostUsed: 'Most used',
+    searchEngine: 'Search engine',
+    bgAudio: 'Background audio',
+    mutedDefault: 'Muted by default',
+    volume: 'Volume',
+    displayName: 'Display name',
+    profilePhoto: 'Profile photo',
+    uploadPhoto: 'Upload photo',
+    removePhoto: 'Remove photo',
+    exportBackup: 'Export backup',
+    exportDesc: 'Download all shortcuts, profiles and settings.',
+    exportJson: 'Export JSON',
+    exportCsv: 'Export CSV',
+    importBackup: 'Import backup',
+    importDesc: 'Restore from a previously exported Linky file.',
+    importSuccess: 'Imported successfully!',
+    resetDefaults: 'Reset Defaults',
+    resetConfirm: 'Reset all settings to defaults? Shortcuts are kept.',
+    backgroundTitle: 'Background',
+    quickPresets: 'Quick presets',
+    orPasteUrl: 'or paste URL',
+    typeLabel: 'Type',
+    autoDetect: 'Auto detect',
+    uploadFile: 'Upload file',
+    uploadWarning: "Uploaded files won't persist after reload — use a URL for permanent backgrounds.",
+    resetDefault: 'Reset default',
+    solidGradient: 'Solid / Gradient',
+    solidColor: 'Solid color',
+    gradientFrom: 'From',
+    gradientTo: 'To',
+    gradientAngle: 'Angle',
+    previewBg: 'Preview',
+    profilesTitle: 'Profiles',
+    profilesDesc: 'Each profile has its own independent set of shortcuts.',
+    newProfile: 'New profile',
+    profileName: 'Profile name…',
+    active: 'Active',
+    shortcuts_count: 'shortcuts',
+    rename: 'Rename',
+    welcomeTitle: 'Welcome to Linky',
+    welcomeSub: 'Your personal shortcut hub is ready.',
+    oneClickLaunch: 'One-click launch',
+    oneClickDesc: 'Open any site instantly',
+    smartGroups: 'Smart groups',
+    smartGroupsDesc: 'Organize by context',
+    fullControl: 'Full control',
+    fullControlDesc: 'Themes, backgrounds & more',
+    whatToCall: 'What should we call you?',
+    yourName: 'Your name',
+    letsGo: "Let's go →",
+    addPhotoLater: 'You can add a profile photo later from Profiles.',
+    uploadYourPhoto: 'Upload your photo',
+  },
+
+  hi: {
+    shortcutHub: 'शॉर्टकट हब',
+    addShortcut: 'शॉर्टकट जोड़ें',
+    background: 'पृष्ठभूमि',
+    profiles: 'प्रोफ़ाइल',
+    settings: 'सेटिंग्स',
+    lockLayout: 'लेआउट लॉक करें',
+    unlockToEdit: 'संपादन के लिए अनलॉक करें',
+    searchPlaceholder: 'शॉर्टकट खोजें या Enter दबाएं…',
+    goodMorning: 'सुप्रभात',
+    goodAfternoon: 'नमस्ते',
+    goodEvening: 'शुभ संध्या',
+    ofDay: 'दिन का',
+    welcomeBack: 'वापस स्वागत है',
+    shortcutsReady: 'शॉर्टकट तैयार',
+    library: 'लाइब्रेरी',
+    groups: 'समूह',
+    pinned: 'पिन किया',
+    mostClicked: 'सबसे ज़्यादा क्लिक',
+    launches: 'बार खोला',
+    notTracked: 'अभी तक ट्रैक नहीं',
+    totalLaunches: 'कुल लॉन्च',
+    topGroup: 'शीर्ष समूह',
+    noActivity: 'ट्रैक करने के लिए क्लिक करें',
+    pinned_section: 'पिन किए गए',
+    noShortcutsYet: 'आपका हब इंतज़ार कर रहा है',
+    addFirst: 'शुरू करने के लिए अपना पहला शॉर्टकट जोड़ें',
+    noMatch: 'कोई मिलान नहीं',
+    pressEnterSearch: 'वेब खोजने के लिए Enter दबाएं',
+    view: 'विवरण देखें',
+    pin: 'पिन करें',
+    unpin: 'अनपिन करें',
+    edit: 'संपादित करें',
+    delete: 'हटाएं',
+    cancel: 'रद्द करें',
+    save: 'सहेजें',
+    done: 'हो गया',
+    close: 'बंद करें',
+    apply: 'लागू करें',
+    reset: 'रीसेट',
+    newShortcut: 'नया शॉर्टकट',
+    editShortcut: 'शॉर्टकट संपादित करें',
+    quickAdd: 'त्वरित जोड़ें',
+    name: 'नाम',
+    url: 'URL',
+    group: 'समूह',
+    description: 'विवरण',
+    customIconUrl: 'कस्टम आइकन URL',
+    optional: 'वैकल्पिक',
+    shownInView: 'व्यू पैनल में दिखाया गया',
+    addShortcutBtn: 'शॉर्टकट जोड़ें',
+    saveChanges: 'परिवर्तन सहेजें',
+    openSite: 'साइट खोलें',
+    addedOn: 'जोड़ा गया',
+    settingsTitle: 'सेटिंग्स',
+    appearance: 'रूप',
+    behavior: 'व्यवहार',
+    audio: 'ऑडियो',
+    profile: 'प्रोफ़ाइल',
+    data: 'डेटा',
+    language: 'भाषा',
+    accentColor: 'एक्सेंट रंग',
+    cardStyle: 'कार्ड स्टाइल',
+    tileSize: 'टाइल आकार',
+    showClock: 'घड़ी दिखाएं',
+    showStats: 'आंकड़े दिखाएं',
+    showFooter: 'फुटर दिखाएं',
+    showTips: 'टिप्स दिखाएं',
+    openLinks: 'लिंक खोलें',
+    newTab: 'नया टैब',
+    sameTab: 'वही टैब',
+    editMode: 'संपादन मोड',
+    allowDrag: 'ड्रैग-ड्रॉप और कार्ड क्रियाएं',
+    confirmDelete: 'हटाने की पुष्टि',
+    groupSort: 'समूह क्रम',
+    sortAZ: 'A → Z',
+    sortManual: 'मैन्युअल',
+    sortMostUsed: 'सबसे ज़्यादा उपयोग',
+    searchEngine: 'खोज इंजन',
+    bgAudio: 'पृष्ठभूमि ऑडियो',
+    mutedDefault: 'डिफ़ॉल्ट म्यूट',
+    volume: 'वॉल्यूम',
+    displayName: 'प्रदर्शन नाम',
+    profilePhoto: 'प्रोफ़ाइल फोटो',
+    uploadPhoto: 'फोटो अपलोड करें',
+    removePhoto: 'फोटो हटाएं',
+    exportBackup: 'बैकअप निर्यात करें',
+    exportDesc: 'सभी शॉर्टकट, प्रोफ़ाइल और सेटिंग्स डाउनलोड करें।',
+    exportJson: 'JSON निर्यात करें',
+    exportCsv: 'CSV निर्यात करें',
+    importBackup: 'बैकअप आयात करें',
+    importDesc: 'पहले निर्यात की गई Linky फ़ाइल से पुनर्स्थापित करें।',
+    importSuccess: 'सफलतापूर्वक आयात किया!',
+    resetDefaults: 'डिफ़ॉल्ट रीसेट करें',
+    resetConfirm: 'सभी सेटिंग्स रीसेट करें? शॉर्टकट सुरक्षित रहेंगे।',
+    backgroundTitle: 'पृष्ठभूमि',
+    quickPresets: 'त्वरित प्रीसेट',
+    orPasteUrl: 'या URL पेस्ट करें',
+    typeLabel: 'प्रकार',
+    autoDetect: 'स्वतः पहचानें',
+    uploadFile: 'फ़ाइल अपलोड करें',
+    uploadWarning: 'अपलोड की गई फ़ाइलें रीलोड के बाद नहीं रहेंगी।',
+    resetDefault: 'डिफ़ॉल्ट रीसेट करें',
+    solidGradient: 'सॉलिड / ग्रेडिएंट',
+    solidColor: 'सॉलिड रंग',
+    gradientFrom: 'से',
+    gradientTo: 'तक',
+    gradientAngle: 'कोण',
+    previewBg: 'पूर्वावलोकन',
+    profilesTitle: 'प्रोफ़ाइल',
+    profilesDesc: 'हर प्रोफ़ाइल के अपने शॉर्टकट होते हैं।',
+    newProfile: 'नई प्रोफ़ाइल',
+    profileName: 'प्रोफ़ाइल का नाम…',
+    active: 'सक्रिय',
+    shortcuts_count: 'शॉर्टकट',
+    rename: 'नाम बदलें',
+    welcomeTitle: 'Linky में आपका स्वागत है',
+    welcomeSub: 'आपका शॉर्टकट हब तैयार है।',
+    oneClickLaunch: 'एक क्लिक लॉन्च',
+    oneClickDesc: 'कोई भी साइट तुरंत खोलें',
+    smartGroups: 'स्मार्ट समूह',
+    smartGroupsDesc: 'संदर्भ के अनुसार व्यवस्थित करें',
+    fullControl: 'पूर्ण नियंत्रण',
+    fullControlDesc: 'थीम, पृष्ठभूमि और अधिक',
+    whatToCall: 'हम आपको क्या कहें?',
+    yourName: 'आपका नाम',
+    letsGo: 'चलें →',
+    addPhotoLater: 'आप बाद में प्रोफ़ाइल से फोटो जोड़ सकते हैं।',
+    uploadYourPhoto: 'अपनी फोटो अपलोड करें',
+  },
+
+  es: {
+    shortcutHub: 'centro de accesos',
+    addShortcut: 'Agregar acceso',
+    background: 'Fondo',
+    profiles: 'Perfiles',
+    settings: 'Ajustes',
+    lockLayout: 'Bloquear diseño',
+    unlockToEdit: 'Desbloquear para editar',
+    searchPlaceholder: 'Buscar accesos o presiona Enter para buscar en la web…',
+    goodMorning: 'Buenos días',
+    goodAfternoon: 'Buenas tardes',
+    goodEvening: 'Buenas noches',
+    ofDay: 'del día',
+    welcomeBack: 'Bienvenido de vuelta',
+    shortcutsReady: 'accesos listos',
+    library: 'Biblioteca',
+    groups: 'grupos',
+    pinned: 'fijados',
+    mostClicked: 'Más clicado',
+    launches: 'aperturas',
+    notTracked: 'Sin seguimiento aún',
+    totalLaunches: 'Total de aperturas',
+    topGroup: 'Grupo principal',
+    noActivity: 'Haz clic para rastrear',
+    pinned_section: 'Fijados',
+    noShortcutsYet: 'Tu hub te espera',
+    addFirst: 'Agrega tu primer acceso para comenzar',
+    noMatch: 'Sin coincidencias para',
+    pressEnterSearch: 'Presiona Enter para buscar en la web',
+    view: 'Ver detalles',
+    pin: 'Fijar',
+    unpin: 'Desfijar',
+    edit: 'Editar',
+    delete: 'Eliminar',
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    done: 'Listo',
+    close: 'Cerrar',
+    apply: 'Aplicar',
+    reset: 'Restablecer',
+    newShortcut: 'Nuevo acceso',
+    editShortcut: 'Editar acceso',
+    quickAdd: 'Agregar rápido',
+    name: 'Nombre',
+    url: 'URL',
+    group: 'Grupo',
+    description: 'Descripción',
+    customIconUrl: 'URL de icono personalizado',
+    optional: 'opcional',
+    shownInView: 'mostrado en el panel Ver',
+    addShortcutBtn: 'Agregar acceso',
+    saveChanges: 'Guardar cambios',
+    openSite: 'Abrir sitio',
+    addedOn: 'Agregado',
+    settingsTitle: 'Ajustes',
+    appearance: 'Apariencia',
+    behavior: 'Comportamiento',
+    audio: 'Audio',
+    profile: 'Perfil',
+    data: 'Datos',
+    language: 'Idioma',
+    accentColor: 'Color de acento',
+    cardStyle: 'Estilo de tarjeta',
+    tileSize: 'Tamaño de mosaico',
+    showClock: 'Mostrar reloj',
+    showStats: 'Mostrar estadísticas',
+    showFooter: 'Mostrar pie de página',
+    showTips: 'Mostrar consejos',
+    openLinks: 'Abrir enlaces',
+    newTab: 'Nueva pestaña',
+    sameTab: 'Misma pestaña',
+    editMode: 'Modo de edición',
+    allowDrag: 'Permitir arrastrar y acciones',
+    confirmDelete: 'Confirmar eliminación',
+    groupSort: 'Orden de grupos',
+    sortAZ: 'A → Z',
+    sortManual: 'Manual',
+    sortMostUsed: 'Más usado',
+    searchEngine: 'Motor de búsqueda',
+    bgAudio: 'Audio de fondo',
+    mutedDefault: 'Silenciado por defecto',
+    volume: 'Volumen',
+    displayName: 'Nombre de display',
+    profilePhoto: 'Foto de perfil',
+    uploadPhoto: 'Subir foto',
+    removePhoto: 'Eliminar foto',
+    exportBackup: 'Exportar respaldo',
+    exportDesc: 'Descarga todos tus accesos, perfiles y ajustes.',
+    exportJson: 'Exportar JSON',
+    exportCsv: 'Exportar CSV',
+    importBackup: 'Importar respaldo',
+    importDesc: 'Restaurar desde un archivo Linky exportado.',
+    importSuccess: '¡Importado exitosamente!',
+    resetDefaults: 'Restablecer valores',
+    resetConfirm: '¿Restablecer todos los ajustes? Los accesos se conservan.',
+    backgroundTitle: 'Fondo',
+    quickPresets: 'Presets rápidos',
+    orPasteUrl: 'o pega una URL',
+    typeLabel: 'Tipo',
+    autoDetect: 'Detectar automáticamente',
+    uploadFile: 'Subir archivo',
+    uploadWarning: 'Los archivos subidos no persisten tras recargar.',
+    resetDefault: 'Restablecer predeterminado',
+    solidGradient: 'Sólido / Degradado',
+    solidColor: 'Color sólido',
+    gradientFrom: 'Desde',
+    gradientTo: 'Hasta',
+    gradientAngle: 'Ángulo',
+    previewBg: 'Vista previa',
+    profilesTitle: 'Perfiles',
+    profilesDesc: 'Cada perfil tiene su propio conjunto de accesos.',
+    newProfile: 'Nuevo perfil',
+    profileName: 'Nombre del perfil…',
+    active: 'Activo',
+    shortcuts_count: 'accesos',
+    rename: 'Renombrar',
+    welcomeTitle: 'Bienvenido a Linky',
+    welcomeSub: 'Tu centro de accesos está listo.',
+    oneClickLaunch: 'Un clic para abrir',
+    oneClickDesc: 'Abre cualquier sitio al instante',
+    smartGroups: 'Grupos inteligentes',
+    smartGroupsDesc: 'Organiza por contexto',
+    fullControl: 'Control total',
+    fullControlDesc: 'Temas, fondos y más',
+    whatToCall: '¿Cómo debemos llamarte?',
+    yourName: 'Tu nombre',
+    letsGo: 'Vamos →',
+    addPhotoLater: 'Puedes agregar una foto desde Perfiles.',
+    uploadYourPhoto: 'Sube tu foto',
+  },
+
+  fr: {
+    shortcutHub: 'hub de raccourcis',
+    addShortcut: 'Ajouter raccourci',
+    background: 'Arrière-plan',
+    profiles: 'Profils',
+    settings: 'Paramètres',
+    lockLayout: 'Verrouiller',
+    unlockToEdit: 'Déverrouiller pour éditer',
+    searchPlaceholder: 'Rechercher ou appuyez sur Entrée pour chercher sur le web…',
+    goodMorning: 'Bonjour',
+    goodAfternoon: 'Bon après-midi',
+    goodEvening: 'Bonsoir',
+    ofDay: 'de la journée',
+    welcomeBack: 'Bon retour',
+    shortcutsReady: 'raccourcis prêts',
+    library: 'Bibliothèque',
+    groups: 'groupes',
+    pinned: 'épinglés',
+    mostClicked: 'Plus cliqué',
+    launches: 'ouvertures',
+    notTracked: 'Pas encore suivi',
+    totalLaunches: 'Ouvertures totales',
+    topGroup: 'Groupe principal',
+    noActivity: 'Cliquez pour suivre',
+    pinned_section: 'Épinglés',
+    noShortcutsYet: 'Votre hub vous attend',
+    addFirst: 'Ajoutez votre premier raccourci',
+    noMatch: 'Aucun résultat pour',
+    pressEnterSearch: 'Appuyez sur Entrée pour chercher',
+    view: 'Voir les détails',
+    pin: 'Épingler',
+    unpin: 'Désépingler',
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    cancel: 'Annuler',
+    save: 'Sauvegarder',
+    done: 'Terminé',
+    close: 'Fermer',
+    apply: 'Appliquer',
+    reset: 'Réinitialiser',
+    newShortcut: 'Nouveau raccourci',
+    editShortcut: 'Modifier raccourci',
+    quickAdd: 'Ajout rapide',
+    name: 'Nom',
+    url: 'URL',
+    group: 'Groupe',
+    description: 'Description',
+    customIconUrl: "URL d'icône personnalisé",
+    optional: 'optionnel',
+    shownInView: 'affiché dans le panneau Vue',
+    addShortcutBtn: 'Ajouter raccourci',
+    saveChanges: 'Sauvegarder',
+    openSite: 'Ouvrir le site',
+    addedOn: 'Ajouté le',
+    settingsTitle: 'Paramètres',
+    appearance: 'Apparence',
+    behavior: 'Comportement',
+    audio: 'Audio',
+    profile: 'Profil',
+    data: 'Données',
+    language: 'Langue',
+    accentColor: "Couleur d'accentuation",
+    cardStyle: 'Style de carte',
+    tileSize: 'Taille des tuiles',
+    showClock: 'Afficher horloge',
+    showStats: 'Afficher stats',
+    showFooter: 'Afficher pied de page',
+    showTips: 'Afficher conseils',
+    openLinks: 'Ouvrir liens',
+    newTab: 'Nouvel onglet',
+    sameTab: 'Même onglet',
+    editMode: "Mode d'édition",
+    allowDrag: 'Glisser-déposer et actions',
+    confirmDelete: 'Confirmer suppression',
+    groupSort: 'Tri des groupes',
+    sortAZ: 'A → Z',
+    sortManual: 'Manuel',
+    sortMostUsed: 'Plus utilisé',
+    searchEngine: 'Moteur de recherche',
+    bgAudio: "Audio d'arrière-plan",
+    mutedDefault: 'Muet par défaut',
+    volume: 'Volume',
+    displayName: 'Nom affiché',
+    profilePhoto: 'Photo de profil',
+    uploadPhoto: 'Téléverser photo',
+    removePhoto: 'Supprimer photo',
+    exportBackup: 'Exporter sauvegarde',
+    exportDesc: 'Téléchargez tous vos raccourcis, profils et paramètres.',
+    exportJson: 'Exporter JSON',
+    exportCsv: 'Exporter CSV',
+    importBackup: 'Importer sauvegarde',
+    importDesc: 'Restaurer depuis un fichier Linky exporté.',
+    importSuccess: 'Importé avec succès !',
+    resetDefaults: 'Réinitialiser',
+    resetConfirm: 'Réinitialiser tous les paramètres ? Les raccourcis sont conservés.',
+    backgroundTitle: "Arrière-plan",
+    quickPresets: 'Préréglages rapides',
+    orPasteUrl: 'ou collez une URL',
+    typeLabel: 'Type',
+    autoDetect: 'Détection automatique',
+    uploadFile: 'Téléverser fichier',
+    uploadWarning: 'Les fichiers téléversés ne persistent pas après rechargement.',
+    resetDefault: 'Réinitialiser',
+    solidGradient: 'Uni / Dégradé',
+    solidColor: 'Couleur unie',
+    gradientFrom: 'De',
+    gradientTo: 'À',
+    gradientAngle: 'Angle',
+    previewBg: 'Aperçu',
+    profilesTitle: 'Profils',
+    profilesDesc: 'Chaque profil a son propre ensemble de raccourcis.',
+    newProfile: 'Nouveau profil',
+    profileName: 'Nom du profil…',
+    active: 'Actif',
+    shortcuts_count: 'raccourcis',
+    rename: 'Renommer',
+    welcomeTitle: 'Bienvenue sur Linky',
+    welcomeSub: 'Votre hub de raccourcis est prêt.',
+    oneClickLaunch: 'Lancement en un clic',
+    oneClickDesc: 'Ouvrez nimporte quel site instantanément',
+    smartGroups: 'Groupes intelligents',
+    smartGroupsDesc: 'Organisez par contexte',
+    fullControl: 'Contrôle total',
+    fullControlDesc: 'Thèmes, arrière-plans et plus',
+    whatToCall: 'Comment vous appelle-t-on ?',
+    yourName: 'Votre nom',
+    letsGo: 'Allons-y →',
+    addPhotoLater: 'Vous pouvez ajouter une photo depuis Profils.',
+    uploadYourPhoto: 'Téléversez votre photo',
+  },
+
+  ar: {
+    shortcutHub: 'مركز الاختصارات',
+    addShortcut: 'إضافة اختصار',
+    background: 'الخلفية',
+    profiles: 'الملفات الشخصية',
+    settings: 'الإعدادات',
+    lockLayout: 'قفل التخطيط',
+    unlockToEdit: 'فتح للتحرير',
+    searchPlaceholder: 'ابحث عن اختصارات أو اضغط Enter للبحث…',
+    goodMorning: 'صباح الخير',
+    goodAfternoon: 'مساء الخير',
+    goodEvening: 'مساء النور',
+    ofDay: 'من اليوم',
+    welcomeBack: 'مرحباً بعودتك',
+    shortcutsReady: 'اختصار جاهز',
+    library: 'المكتبة',
+    groups: 'مجموعات',
+    pinned: 'مثبت',
+    mostClicked: 'الأكثر نقراً',
+    launches: 'مرة فتح',
+    notTracked: 'لم يتتبع بعد',
+    totalLaunches: 'إجمالي الفتحات',
+    topGroup: 'أهم مجموعة',
+    noActivity: 'انقر للتتبع',
+    pinned_section: 'المثبتة',
+    noShortcutsYet: 'مركزك في انتظارك',
+    addFirst: 'أضف اختصارك الأول للبدء',
+    noMatch: 'لا توجد نتائج لـ',
+    pressEnterSearch: 'اضغط Enter للبحث على الويب',
+    view: 'عرض التفاصيل',
+    pin: 'تثبيت',
+    unpin: 'إلغاء التثبيت',
+    edit: 'تعديل',
+    delete: 'حذف',
+    cancel: 'إلغاء',
+    save: 'حفظ',
+    done: 'تم',
+    close: 'إغلاق',
+    apply: 'تطبيق',
+    reset: 'إعادة ضبط',
+    newShortcut: 'اختصار جديد',
+    editShortcut: 'تعديل الاختصار',
+    quickAdd: 'إضافة سريعة',
+    name: 'الاسم',
+    url: 'الرابط',
+    group: 'المجموعة',
+    description: 'الوصف',
+    customIconUrl: 'رابط أيقونة مخصصة',
+    optional: 'اختياري',
+    shownInView: 'يظهر في لوحة العرض',
+    addShortcutBtn: 'إضافة اختصار',
+    saveChanges: 'حفظ التغييرات',
+    openSite: 'فتح الموقع',
+    addedOn: 'أضيف في',
+    settingsTitle: 'الإعدادات',
+    appearance: 'المظهر',
+    behavior: 'السلوك',
+    audio: 'الصوت',
+    profile: 'الملف الشخصي',
+    data: 'البيانات',
+    language: 'اللغة',
+    accentColor: 'لون التمييز',
+    cardStyle: 'نمط البطاقة',
+    tileSize: 'حجم البلاط',
+    showClock: 'عرض الساعة',
+    showStats: 'عرض الإحصائيات',
+    showFooter: 'عرض التذييل',
+    showTips: 'عرض النصائح',
+    openLinks: 'فتح الروابط',
+    newTab: 'تبويب جديد',
+    sameTab: 'نفس التبويب',
+    editMode: 'وضع التحرير',
+    allowDrag: 'السحب والإفلات والإجراءات',
+    confirmDelete: 'تأكيد الحذف',
+    groupSort: 'ترتيب المجموعات',
+    sortAZ: 'أ → ي',
+    sortManual: 'يدوي',
+    sortMostUsed: 'الأكثر استخداماً',
+    searchEngine: 'محرك البحث',
+    bgAudio: 'صوت الخلفية',
+    mutedDefault: 'كتم الصوت افتراضياً',
+    volume: 'مستوى الصوت',
+    displayName: 'اسم العرض',
+    profilePhoto: 'صورة الملف الشخصي',
+    uploadPhoto: 'رفع صورة',
+    removePhoto: 'إزالة الصورة',
+    exportBackup: 'تصدير نسخة احتياطية',
+    exportDesc: 'تنزيل جميع الاختصارات والملفات والإعدادات.',
+    exportJson: 'تصدير JSON',
+    exportCsv: 'تصدير CSV',
+    importBackup: 'استيراد نسخة احتياطية',
+    importDesc: 'استعادة من ملف Linky مُصدَّر سابقاً.',
+    importSuccess: 'تم الاستيراد بنجاح!',
+    resetDefaults: 'إعادة الضبط الافتراضي',
+    resetConfirm: 'إعادة ضبط الإعدادات؟ الاختصارات محفوظة.',
+    backgroundTitle: 'الخلفية',
+    quickPresets: 'إعدادات سريعة',
+    orPasteUrl: 'أو الصق رابطاً',
+    typeLabel: 'النوع',
+    autoDetect: 'كشف تلقائي',
+    uploadFile: 'رفع ملف',
+    uploadWarning: 'الملفات المرفوعة لن تبقى بعد إعادة التحميل.',
+    resetDefault: 'إعادة الضبط',
+    solidGradient: 'لون ثابت / تدرج',
+    solidColor: 'لون ثابت',
+    gradientFrom: 'من',
+    gradientTo: 'إلى',
+    gradientAngle: 'الزاوية',
+    previewBg: 'معاينة',
+    profilesTitle: 'الملفات الشخصية',
+    profilesDesc: 'كل ملف شخصي له مجموعة اختصاراته الخاصة.',
+    newProfile: 'ملف شخصي جديد',
+    profileName: 'اسم الملف…',
+    active: 'نشط',
+    shortcuts_count: 'اختصارات',
+    rename: 'إعادة التسمية',
+    welcomeTitle: 'مرحباً بك في Linky',
+    welcomeSub: 'مركز اختصاراتك جاهز.',
+    oneClickLaunch: 'فتح بنقرة واحدة',
+    oneClickDesc: 'افتح أي موقع على الفور',
+    smartGroups: 'مجموعات ذكية',
+    smartGroupsDesc: 'نظّم حسب السياق',
+    fullControl: 'تحكم كامل',
+    fullControlDesc: 'الثيمات والخلفيات والمزيد',
+    whatToCall: 'ماذا نسميك؟',
+    yourName: 'اسمك',
+    letsGo: 'هيا بنا ←',
+    addPhotoLater: 'يمكنك إضافة صورة لاحقاً من الملفات الشخصية.',
+    uploadYourPhoto: 'ارفع صورتك',
+  },
+}
+
+export function t(lang: AppLanguage, key: keyof TranslationKeys): string {
+  return translations[lang]?.[key] ?? translations.en[key] ?? key
+}
+
+export const LANGUAGE_OPTIONS: { value: AppLanguage; label: string; native: string }[] = [
+  { value: 'en', label: 'English',  native: 'English' },
+  { value: 'hi', label: 'Hindi',    native: 'हिन्दी' },
+  { value: 'es', label: 'Spanish',  native: 'Español' },
+  { value: 'fr', label: 'French',   native: 'Français' },
+  { value: 'ar', label: 'Arabic',   native: 'العربية' },
+]

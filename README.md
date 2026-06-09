@@ -1,132 +1,126 @@
-# ShortcutHub
+# Linky
 
-Your launchpad, your vibe, your flow. 🚀
+Linky is a modern, local-first shortcut hub that helps you organize, search, and launch your daily websites from one beautiful dashboard.
 
-ShortcutHub is a personal start page designed for fast daily execution, visual clarity, and smooth motion. It keeps your links organized in groups and lets your background media stay the hero.
-
-![ShortcutHub Preview](SSS.png)
-
-## Live Demo
-
-Live demo: add your link here later.
-
-Example placeholder:
-
-- [https://your-live-demo-link-here](https://short-cut-hub.vercel.app/)
-
-## The Story Behind It
-
-### The idea 💡
-
-Every day starts with the same routine: open a browser, open the same tools, search the same tabs, repeat.
-
-I wanted one beautiful, practical command center where everything important is one click away.
-
-### The problem 😵
-
-- Default bookmark bars get crowded quickly.
-- Important links get buried.
-- Context switching kills focus.
-- Most start pages either look plain or feel too heavy.
-
-### Thought process 🧠
-
-I asked a simple question:
-
-How can I keep it fast like bookmarks, but make it feel premium and alive?
-
-The approach:
-
-- Keep the stack lightweight (plain HTML, CSS, JS).
-- Store everything in browser local storage.
-- Use grouped cards for quick scanning.
-- Add motion and depth without adding build complexity.
-
-### Solution ✅
-
-ShortcutHub combines:
-
-- grouped shortcuts (AI, Daily, Career, Social, and more)
-- fast search
-- quick add/edit/delete
-- drag and drop reorder
-- default animated wallpaper background
-- focused settings and onboarding flow
-
-## 3D Feel and Motion ✨
-
-Even with a lightweight stack, the interface is designed to feel dimensional and alive.
-
-- subtle 3D-like hover lift on cards and panels
-- motion transitions for interactions
-- smooth reveal and entry animations
-- glow-based hover states for depth cues
-- responsive behavior tuned for desktop and mobile
-
-## Current Defaults (What New Users See)
-
-When someone downloads this project and opens it fresh, the default setup is:
-
-- light-first visual mode
-- default accent: #3de0d0
-- default background fallback: space-drive.webm
-- first-run onboarding with name capture
-- local persistence key: shortcuthub_data_v6
-
-So yes, new users get the same baseline experience out of the box. 🎯
+## One-line pitch
+Linky is your personal, customizable shortcut hub - a beautiful offline dashboard that organizes and launches your daily websites instantly.
 
 ## Features
 
-- editable shortcut cards
-- group-based organization
-- drag-and-drop ordering
-- keyboard shortcuts for speed
-- smart background dialog (image/video URL or upload)
-- real-time clock with seconds
-- settings tabs for appearance/behavior/background/profile
-- per-user persistence in local storage
+- Shortcut management
+- Add, edit, delete, pin, and reorder shortcuts
+- Group shortcuts and add tags for better organization
+- Search across name, URL, group, description, icon, and tags
 
-## Tech Stack
+- Smart productivity tools
+- Quick add templates for popular sites
+- Auto-suggested group, description, and tags from URL/domain
+- Favicon/logo fallback support
 
-- HTML
-- CSS
-- JavaScript (vanilla)
+- Personalization
+- Dynamic backgrounds (video/image/YouTube/solid/gradient)
+- Default offline video background (`public/space-drive.webm`)
+- Accent color, tile sizing, card style, and UI behavior controls
+- Multiple profiles with avatar upload
 
-No framework. No build step. Open and run.
+- Data and reliability
+- Local-first persistence with Zustand persist
+- Import/export full backup (JSON)
+- Import/export shortcuts (CSV)
+- Analytics export/reset controls
 
-## Project Structure
+- Analytics
+- Total and per-shortcut launch tracking
+- Daily launch analytics persisted in app state
+- 7-day activity and top-today insights
 
-- index.html
-- styles.css
-- app.js
-- about.html
-- space-drive.webm
-- SSS.png
+- Internationalization
+- Multi-language support (English, Hindi, Spanish, French, Arabic)
+- Runtime language switching from Settings
 
-## Run Locally
+- Desktop ready
+- Electron runtime scaffolding included
+- Windows installer generation configured via electron-builder
 
-1. Download or clone this repository.
-2. Open the project folder.
-3. Open index.html in your browser.
+## Tech stack
 
-Optional: use a local server extension for smoother development workflow.
+- React + TypeScript + Vite
+- Zustand (state + persistence)
+- Tailwind CSS
+- DnD Kit
+- PapaParse (CSV import/export)
+- Electron + electron-builder
+- Vitest (unit tests)
 
-## Why This Style Works
+## Project structure
 
-- wallpaper stays visually dominant
-- card boundaries stay clear with crisp outlines
-- interaction states are obvious and smooth
-- fast load, low complexity, easy to maintain
+- `src/` - app source code
+- `src/components/` - UI components and dialogs
+- `src/store/` - Zustand application store
+- `src/utils/` - helpers, i18n, CSV/background logic
+- `electron/` - Electron main and preload files
+- `public/` - static assets (default background video)
+- `.github/workflows/ci.yml` - CI test/build pipeline
 
-## Ideas for Future Upgrades
+## Scripts
 
-- widget cards (weather, notes, tasks)
-- per-group custom colors
-- multi-layout presets
-- installable PWA version
-- cloud sync for settings and links
+- `npm run dev` - run web app in development
+- `npm run build` - type-check and production build
+- `npm run preview` - preview production web build
+- `npm run test` - run Vitest in watch mode
+- `npm run test:run` - run tests once (CI mode)
+- `npm run desktop:dev` - run Vite + Electron desktop dev mode
+- `npm run desktop:start` - start Electron against built assets
+- `npm run desktop:build` - build web app and package desktop installer
+
+## Getting started
+
+1. Install dependencies
+
+```bash
+npm install
+```
+
+2. Run web development mode
+
+```bash
+npm run dev
+```
+
+3. Run tests
+
+```bash
+npm run test:run
+```
+
+4. Build for production
+
+```bash
+npm run build
+```
+
+## Desktop packaging
+
+To package desktop builds:
+
+```bash
+npm run desktop:build
+```
+
+Windows installer output is generated in `release/`.
+
+## CI
+
+CI runs on push and pull request and performs:
+
+- dependency install (`npm ci`)
+- unit tests (`npm run test:run`)
+- production build (`npm run build`)
+
+## Status
+
+Linky currently includes core CRUD, personalization, import/export, analytics tracking, tests, CI, and desktop packaging scaffolding.
 
 ## License
 
-This project is licensed under the MIT License.
-See the LICENSE file for full text.
+No license file has been added yet.
