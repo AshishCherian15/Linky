@@ -123,4 +123,4 @@ Linky currently includes core CRUD, personalization, import/export, analytics tr
 
 ## License
 
-No license file has been added yet.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
