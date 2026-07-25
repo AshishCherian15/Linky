@@ -40,8 +40,12 @@ export default function ShortcutCard({ shortcut }: Props) {
     const url = normalizeUrl(shortcut.url)
     if (!isValidUrl(url)) return
     trackClick(shortcut.id)
-    if (settings.openInNewTab) window.open(url, '_blank', 'noopener,noreferrer')
-    else window.location.href = url
+    if (shortcut.browser && (window as any).linkyDesktop?.launchBrowser) {
+      (window as any).linkyDesktop.launchBrowser(shortcut.browser, url)
+    } else {
+      if (settings.openInNewTab) window.open(url, '_blank', 'noopener,noreferrer')
+      else window.location.href = url
+    }
   }
 
   function stop(fn: () => void) {
@@ -80,6 +84,22 @@ export default function ShortcutCard({ shortcut }: Props) {
 
       {/* pin glow dot */}
       {shortcut.pinned && <div className="pin-dot" />}
+
+      {/* status/alert indicators */}
+      <div className="absolute top-2 right-2 flex items-center gap-1 z-20">
+        {shortcut.status === 'broken' && (
+          <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" title="Broken link" />
+        )}
+        {shortcut.status === 'checking' && (
+          <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-ping" title="Checking link..." />
+        )}
+        {shortcut.expiryDate && shortcut.expiryDate < Date.now() && (
+          <span className="text-[10px]" title="Expired link">⏰</span>
+        )}
+        {shortcut.browser && (
+          <span className="text-[9px] px-1 rounded bg-white/10 text-white/50 uppercase font-mono" title={`Opens in ${shortcut.browser}`}>{shortcut.browser}</span>
+        )}
+      </div>
 
       {/* icon */}
       <div className="relative flex justify-center mb-2 z-10">

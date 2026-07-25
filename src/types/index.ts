@@ -9,6 +9,10 @@ export interface Shortcut {
   pinned: boolean
   clicks: number
   createdAt: number
+  expiryDate?: number      // optional timestamp for link expiry
+  status?: 'ok' | 'broken' | 'checking' // broken link checker status
+  browser?: string         // preferred browser target (e.g. 'chrome', 'firefox')
+  publicLinkId?: string    // ID of the public link if this shortcut has been made public
 }
 
 export interface Profile {
@@ -26,6 +30,7 @@ export type TileSize    = 'compact' | 'comfortable' | 'large'
 export type GroupSort   = 'az' | 'manual' | 'most-used'
 export type SearchEngine = 'google' | 'bing' | 'duckduckgo' | 'brave' | 'custom'
 export type AppLanguage  = 'en' | 'hi' | 'es' | 'fr' | 'ar'
+export type AppTheme     = 'neon' | 'pastel' | 'minimal'
 
 export interface Background {
   type: BackgroundType
@@ -33,6 +38,12 @@ export interface Background {
   sourceKind: 'url' | 'upload'
   bgColor?: string       // used when type === 'none'
   bgGradient?: string    // CSS gradient string when type === 'none'
+}
+
+export interface CategoryMeta {
+  name: string
+  emoji: string
+  color?: string
 }
 
 export interface Settings {
@@ -56,6 +67,17 @@ export interface Settings {
   audioVolume: number
   language: AppLanguage
   activeProfileId: string
+  
+  // Upgrade properties
+  theme: AppTheme
+  darkMode: boolean
+  expiryReminders: boolean
+  keyboardShortcuts: boolean
+  browserSyncToken: string
+  browserSyncPort: number
+  splitViewEnabled: boolean
+  splitViewProfileId?: string
+  categories: Record<string, CategoryMeta> // custom categories metadata
 }
 
 export interface AppState {
@@ -78,4 +100,8 @@ export type DialogType =
   | 'settings'
   | 'welcome'
   | 'profile-manager'
+  | 'analytics'
+  | 'category-manager'
+  | 'auth'
   | null
+

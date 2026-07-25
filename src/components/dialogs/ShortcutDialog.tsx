@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../../store/useStore'
 import { getFavicon, inferShortcutMeta, isValidUrl, normalizeUrl, safeText } from '../../utils/helpers'
 import { t } from '../../utils/i18n'
+import { apiClient } from '../../api/client'
 
 const QUICK_PICKS = [
   { name: 'YouTube',  url: 'https://youtube.com',         desc: 'Watch and share videos' },
@@ -36,9 +37,15 @@ export default function ShortcutDialog() {
   const [description, setDesc]      = useState('')
   const [error, setError]           = useState('')
   const [preview, setPreview]       = useState('')
+  const [browser, setBrowser]       = useState('')
+  const [expiry, setExpiry]         = useState('')
+  const [fetchingMeta, setFetchingMeta] = useState(false)
+  const [makePublic, setMakePublic] = useState(false)
+  const [customAlias, setCustomAlias] = useState('')
+  const [publicExpiry, setPublicExpiry] = useState('')
+  const [creatingPublic, setCreatingPublic] = useState(false)
 
   useEffect(() => {
-    if (!isOpen) return
     if (isEdit && editingShortcut) {
       setName(editingShortcut.name)
       setUrl(editingShortcut.url)
@@ -47,11 +54,50 @@ export default function ShortcutDialog() {
       setIcon(editingShortcut.icon)
       setDesc(editingShortcut.description ?? '')
       setPreview(editingShortcut.icon || getFavicon(editingShortcut.url))
+      setBrowser(editingShortcut.browser ?? '')
+      setExpiry(editingShortcut.expiryDate ? new Date(editingShortcut.expiryDate).toISOString().slice(0, 10) : '')
     } else {
-      setName(''); setUrl(''); setGroup(''); setTagsText(''); setIcon(''); setDesc(''); setPreview('')
+      setName(editingShortcut?.name ?? '')
+      setUrl(editingShortcut?.url ?? '')
+      setGroup(editingShortcut?.group ?? '')
+      setTagsText((editingShortcut?.tags ?? []).join(', '))
+      setIcon(editingShortcut?.icon ?? '')
+      setDesc(editingShortcut?.description ?? '')
+      setPreview(editingShortcut?.icon || (editingShortcut?.url ? getFavicon(editingShortcut.url) : ''))
+      setBrowser(editingShortcut?.browser ?? '')
+      setExpiry(editingShortcut?.expiryDate ? new Date(editingShortcut.expiryDate).toISOString().slice(0, 10) : '')
     }
     setError('')
   }, [isOpen, isEdit, editingShortcut])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const u = normalizeUrl(url)
+    if (!isValidUrl(u) || isEdit) return
+
+    let active = true
+    const delayDebounceFn = setTimeout(async () => {
+      if ((window as any).linkyDesktop?.fetchMeta) {
+        setFetchingMeta(true)
+        try {
+          const meta = await (window as any).linkyDesktop.fetchMeta(u)
+          if (active) {
+            if (meta.title && !name) setName(meta.title)
+            if (meta.description && !description) setDesc(meta.description)
+          }
+        } catch (e) {
+          console.error(e)
+        } finally {
+          if (active) setFetchingMeta(false)
+        }
+      }
+    }, 700)
+
+    return () => {
+      active = false
+      clearTimeout(delayDebounceFn)
+    }
+  }, [url])
 
   useEffect(() => {
     const u = normalizeUrl(url)
@@ -69,7 +115,7 @@ export default function ShortcutDialog() {
     if (!tagsText.trim()) setTagsText(suggestion.tags.join(', '))
   }, [url])
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const n  = safeText(name.trim())
     const u  = normalizeUrl(url)
@@ -83,11 +129,41 @@ export default function ShortcutDialog() {
     if (!n) return setError(`${t(language, 'name')} is required.`)
     if (!isValidUrl(u)) return setError(`Enter a valid ${t(language, 'url')}.`)
     if (ic && !isValidUrl(ic)) return setError(`${t(language, 'customIconUrl')} is not valid.`)
+    const expiryTimestamp = expiry ? new Date(expiry).getTime() : undefined
+    
+    let shortcutId: string
+    
     if (isEdit && editingShortcut) {
-      updateShortcut(editingShortcut.id, { name: n, url: u, group: g, tags, icon: ic, description: d })
+      updateShortcut(editingShortcut.id, { name: n, url: u, group: g, tags, icon: ic, description: d, browser, expiryDate: expiryTimestamp })
+      shortcutId = editingShortcut.id
     } else {
-      addShortcut({ name: n, url: u, group: g, tags, icon: ic, description: d, pinned: false })
+      addShortcut({ name: n, url: u, group: g, tags, icon: ic, description: d, pinned: false, browser, expiryDate: expiryTimestamp })
+      // Get the newly created shortcut ID (this is a simplification - in real app, you'd return it from addShortcut)
+      const activeProfile = useStore.getState().activeProfile()
+      const newShortcut = activeProfile.shortcuts.find(s => s.name === n && s.url === u)
+      shortcutId = newShortcut?.id || ''
     }
+
+    // Create public link if makePublic is true
+    if (makePublic) {
+      try {
+        setCreatingPublic(true)
+        const publicLink = await apiClient.createLink({
+          longUrl: u,
+          title: n,
+          customAlias: customAlias || undefined,
+          expiresAt: publicExpiry || undefined,
+        })
+        // Update the shortcut with the public link ID
+        updateShortcut(shortcutId, { publicLinkId: publicLink.id })
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to create public link')
+        return
+      } finally {
+        setCreatingPublic(false)
+      }
+    }
+
     closeDialog()
   }
 
@@ -174,9 +250,41 @@ export default function ShortcutDialog() {
 
           {/* URL */}
           <div className="flex flex-col gap-1.5">
-            <label className="field-label">{t(language, 'url')} *</label>
+            <label className="field-label flex items-center justify-between">
+              <span>{t(language, 'url')} *</span>
+              {fetchingMeta && <span className="text-[10px] text-accent animate-pulse">Auto-fetching details...</span>}
+            </label>
             <input className="input-base" value={url} onChange={(e) => setUrl(e.target.value)}
               placeholder="https://youtube.com" required />
+          </div>
+
+          {/* Preferred Browser & Expiry */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="field-label">Preferred Browser</label>
+              <select 
+                className="input-base text-xs text-white" 
+                style={{ background: 'rgba(0,0,0,0.28)' }}
+                value={browser} 
+                onChange={(e) => setBrowser(e.target.value)}
+              >
+                <option value="">Default Browser</option>
+                <option value="chrome">Google Chrome</option>
+                <option value="firefox">Mozilla Firefox</option>
+                <option value="edge">Microsoft Edge</option>
+                <option value="brave">Brave Browser</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="field-label">Expiry Date</label>
+              <input 
+                type="date" 
+                className="input-base text-xs text-white"
+                style={{ colorScheme: 'dark' }}
+                value={expiry} 
+                onChange={(e) => setExpiry(e.target.value)} 
+              />
+            </div>
           </div>
 
           {/* Tags */}
@@ -214,6 +322,59 @@ export default function ShortcutDialog() {
               placeholder="https://…/icon.png" />
           </div>
 
+          {/* Make Public Toggle */}
+          <div className="flex items-center gap-3 rounded-xl px-3 py-3"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <button
+              type="button"
+              onClick={() => setMakePublic(!makePublic)}
+              className="relative w-12 h-6 rounded-full transition-colors duration-200"
+              style={{
+                background: makePublic ? 'var(--accent)' : 'rgba(255,255,255,0.2)',
+              }}
+            >
+              <span
+                className="absolute top-1 w-4 h-4 rounded-full bg-white transition-transform duration-200"
+                style={{
+                  left: makePublic ? 'calc(100% - 1.25rem)' : '0.25rem',
+                  transform: 'translateX(0)',
+                }}
+              />
+            </button>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white">Make Public</p>
+              <p className="text-[10px] opacity-50">Create a shareable short link</p>
+            </div>
+          </div>
+
+          {/* Public Link Options (shown when makePublic is true) */}
+          {makePublic && (
+            <div className="flex flex-col gap-3 pl-3 border-l-2" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+              <div className="flex flex-col gap-1.5">
+                <label className="field-label">Custom Alias (optional)</label>
+                <input
+                  className="input-base"
+                  value={customAlias}
+                  onChange={(e) => setCustomAlias(e.target.value)}
+                  placeholder="my-resume"
+                  maxLength={20}
+                  pattern="[a-zA-Z0-9-_]+"
+                />
+                <p className="text-[10px] opacity-40">Leave empty for auto-generated code</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="field-label">Public Link Expiry (optional)</label>
+                <input
+                  type="date"
+                  className="input-base text-xs text-white"
+                  style={{ colorScheme: 'dark' }}
+                  value={publicExpiry}
+                  onChange={(e) => setPublicExpiry(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-red-300"
               style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)' }}>
@@ -223,8 +384,8 @@ export default function ShortcutDialog() {
 
           <div className="mt-1 flex justify-end gap-2">
             <button type="button" className="btn-ghost" onClick={closeDialog}>{t(language, 'cancel')}</button>
-            <button type="submit" className="btn-primary">
-              {isEdit ? t(language, 'saveChanges') : t(language, 'addShortcutBtn')}
+            <button type="submit" className="btn-primary" disabled={creatingPublic}>
+              {creatingPublic ? 'Creating Public Link...' : (isEdit ? t(language, 'saveChanges') : t(language, 'addShortcutBtn'))}
             </button>
           </div>
         </form>

@@ -13,7 +13,8 @@ pnpm-debug.log*
 
 # environment files
 .env
-.env.*
+.env.local
+.env.production
 
 # editor / OS
 .vscode/

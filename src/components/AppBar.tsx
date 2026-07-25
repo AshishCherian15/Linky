@@ -95,6 +95,18 @@ export default function AppBar() {
   const lang           = settings.language ?? 'en'
   const activeProfile  = profiles.find((p) => p.id === settings.activeProfileId) ?? profiles[0]!
 
+  function toggleSplit() {
+    if (profiles.length <= 1) return
+    if (settings.splitViewEnabled) {
+      updateSettings({ splitViewEnabled: false })
+    } else {
+      const other = profiles.find((p) => p.id !== settings.activeProfileId)
+      if (other) {
+        updateSettings({ splitViewEnabled: true, splitViewProfileId: other.id })
+      }
+    }
+  }
+
   return (
     <header className="appbar">
       {/* Animated edit-mode underline */}
@@ -184,6 +196,16 @@ export default function AppBar() {
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
             </svg>
           </ActionBtn>
+
+          {/* Split view comparison */}
+          {profiles.length > 1 && (
+            <ActionBtn onClick={toggleSplit} tip={settings.splitViewEnabled ? "Close Split View" : "Split View / Compare Profiles"}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-[15px] h-[15px]"
+                fill={settings.splitViewEnabled ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+              </svg>
+            </ActionBtn>
+          )}
 
           {/* Edit mode toggle */}
           <div className="tooltip-wrap">

@@ -19,11 +19,20 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Run frontend tests
         run: npm run test:run
 
-      - name: Build app
+      - name: Build frontend
         run: npm run build
+
+      - name: Install server dependencies
+        run: cd server && npm ci
+
+      - name: Generate Prisma client
+        run: cd server && npm run prisma:generate
+
+      - name: Build server
+        run: cd server && npm run build
