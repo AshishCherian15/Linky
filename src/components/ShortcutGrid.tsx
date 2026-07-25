@@ -9,9 +9,8 @@ import ShortcutCard from './ShortcutCard'
 import type { Shortcut } from '../types'
 import { t } from '../utils/i18n'
 
-export default function ShortcutGrid({ profileId }: { profileId?: string }) {
+export default function ShortcutGrid() {
   const activeProfile    = useStore((s) => s.activeProfile)
-  const profiles         = useStore((s) => s.profiles)
   const searchQuery      = useStore((s) => s.searchQuery)
   const settings         = useStore((s) => s.settings)
   const reorderShortcuts = useStore((s) => s.reorderShortcuts)
@@ -21,8 +20,7 @@ export default function ShortcutGrid({ profileId }: { profileId?: string }) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
 
-  const profile  = profileId ? (profiles.find((p) => p.id === profileId) ?? profiles[0]!) : activeProfile()
-  const all      = profile.shortcuts
+  const all      = activeProfile().shortcuts
   const filtered = all.filter((s) => {
     if (!searchQuery) return true
     const q = searchQuery.toLowerCase()

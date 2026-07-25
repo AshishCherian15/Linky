@@ -23,7 +23,6 @@ export default function StatsBar() {
   const userName      = useStore((s) => s.settings.userName)
   const lang          = useStore((s) => s.settings.language)
   const analytics     = useStore((s) => s.analytics)
-  const openDialog    = useStore((s) => s.openDialog)
   if (!showStats) return null
 
   const shortcuts   = activeProfile().shortcuts
@@ -101,9 +100,8 @@ export default function StatsBar() {
       {stats.map((st, i) => (
         <div
           key={st.label}
-          className="stat-card rounded-[18px] px-4 py-3.5 min-h-[96px] animate-rise cursor-pointer hover:border-accent/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+          className="stat-card rounded-[18px] px-4 py-3.5 min-h-[96px] animate-rise"
           style={{ animationDelay: `${i * 55}ms` }}
-          onClick={() => openDialog('analytics')}
         >
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">

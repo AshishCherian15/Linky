@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useStore } from './store/useStore'
 
 import Background        from './components/Background'
@@ -14,8 +14,6 @@ import BackgroundDialog     from './components/dialogs/BackgroundDialog'
 import SettingsDialog       from './components/dialogs/SettingsDialog'
 import ProfileManagerDialog from './components/dialogs/ProfileManagerDialog'
 import ShortcutViewDialog   from './components/dialogs/ShortcutViewDialog'
-import AnalyticsDashboard   from './components/dialogs/AnalyticsDashboard'
-import AuthDialog           from './components/dialogs/AuthDialog'
 import { t } from './utils/i18n'
 
 export default function App() {
@@ -25,82 +23,6 @@ export default function App() {
   const openDialog = useStore((s) => s.openDialog)
 
   const language = useStore((s) => s.settings.language)
-  const syncToken = useStore((s) => s.settings.browserSyncToken)
-  const [dragOver, setDragOver] = useState(false)
-
-  /* sync sync token to electron main process */
-  useEffect(() => {
-    if ((window as any).linkyDesktop?.updateToken) {
-      (window as any).linkyDesktop.updateToken(syncToken)
-    }
-  }, [syncToken])
-
-  /* listen for browser extension saved links */
-  useEffect(() => {
-    if ((window as any).linkyDesktop?.onAddShortcut) {
-      const unsub = (window as any).linkyDesktop.onAddShortcut((data: any) => {
-        openDialog('add-shortcut', {
-          url: data.url,
-          name: data.name || '',
-          group: data.group || 'General',
-          tags: data.tags || [],
-          description: data.description || '',
-          icon: '',
-          pinned: false,
-          clicks: 0,
-          createdAt: Date.now(),
-          id: ''
-        })
-      })
-      return unsub
-    }
-  }, [openDialog])
-
-  /* page drag-and-drop listener */
-  useEffect(() => {
-    function onDragOver(e: DragEvent) {
-      e.preventDefault()
-      const isLink = e.dataTransfer?.types.includes('text/uri-list') || e.dataTransfer?.types.includes('text/plain')
-      if (isLink) setDragOver(true)
-    }
-    
-    function onDragLeave(e: DragEvent) {
-      e.preventDefault()
-      if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
-        setDragOver(false)
-      }
-    }
-    
-    function onDrop(e: DragEvent) {
-      e.preventDefault()
-      setDragOver(false)
-      const urlText = e.dataTransfer?.getData('text/uri-list') || e.dataTransfer?.getData('text/plain') || ''
-      const cleanedUrl = urlText.trim().split('\n')[0] || ''
-      if (cleanedUrl && (cleanedUrl.startsWith('http://') || cleanedUrl.startsWith('https://') || cleanedUrl.includes('.'))) {
-        openDialog('add-shortcut', {
-          url: cleanedUrl,
-          name: '',
-          group: '',
-          tags: [],
-          description: '',
-          icon: '',
-          pinned: false,
-          clicks: 0,
-          createdAt: Date.now(),
-          id: ''
-        })
-      }
-    }
-    
-    window.addEventListener('dragover', onDragOver)
-    window.addEventListener('dragleave', onDragLeave)
-    window.addEventListener('drop', onDrop)
-    return () => {
-      window.removeEventListener('dragover', onDragOver)
-      window.removeEventListener('dragleave', onDragLeave)
-      window.removeEventListener('drop', onDrop)
-    }
-  }, [openDialog])
 
   /* sync language direction */
   useEffect(() => {
@@ -190,18 +112,6 @@ export default function App() {
       <SettingsDialog />
       <ProfileManagerDialog />
       <ShortcutViewDialog />
-      <AnalyticsDashboard />
-      <AuthDialog />
-
-      {dragOver && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none" style={{ background: 'rgba(6, 12, 26, 0.85)', border: '4px dashed var(--accent)', backdropFilter: 'blur(8px)' }}>
-          <div className="text-center animate-float">
-            <span className="text-7xl">📥</span>
-            <p className="text-xl font-bold mt-4 text-white">Drop link anywhere to save to Linky!</p>
-            <p className="text-xs text-white/40 mt-1">We will automatically fetch page preview details.</p>
-          </div>
-        </div>
-      )}
     </>
   )
 }

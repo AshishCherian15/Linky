@@ -1,79 +1,7 @@
 import { create } from 'zustand'
-import { persist, StateStorage } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 import { uid, exportCsv, importCsv } from '../utils/helpers'
-import type { Analytics, AppLanguage, AppState, Background, DialogType, Profile, Settings, Shortcut, AppTheme, CategoryMeta } from '../types'
-
-const customIndexedDBStorage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    const dbValue = await new Promise<string | null>((resolve) => {
-      const request = indexedDB.open('linky-db', 1)
-      request.onupgradeneeded = () => {
-        request.result.createObjectStore('store')
-      }
-      request.onsuccess = () => {
-        const db = request.result
-        const tx = db.transaction('store', 'readonly')
-        const getReq = tx.objectStore('store').get(name)
-        getReq.onsuccess = () => resolve(getReq.result || null)
-        getReq.onerror = () => resolve(null)
-      }
-      request.onerror = () => resolve(null)
-    })
-
-    if (dbValue) return dbValue
-
-    // Fallback: migrate from localStorage if present
-    const localValue = localStorage.getItem(name)
-    if (localValue) {
-      await new Promise<void>((resolve) => {
-        const request = indexedDB.open('linky-db', 1)
-        request.onsuccess = () => {
-          const db = request.result
-          const tx = db.transaction('store', 'readwrite')
-          tx.objectStore('store').put(localValue, name)
-          tx.oncomplete = () => {
-            localStorage.removeItem(name)
-            resolve()
-          }
-        }
-        request.onerror = () => resolve()
-      })
-      return localValue
-    }
-    return null
-  },
-  setItem: async (name: string, value: string): Promise<void> => {
-    return new Promise((resolve) => {
-      const request = indexedDB.open('linky-db', 1)
-      request.onupgradeneeded = () => {
-        request.result.createObjectStore('store')
-      }
-      request.onsuccess = () => {
-        const db = request.result
-        const tx = db.transaction('store', 'readwrite')
-        tx.objectStore('store').put(value, name)
-        tx.oncomplete = () => resolve()
-      }
-      request.onerror = () => resolve()
-    })
-  },
-  removeItem: async (name: string): Promise<void> => {
-    return new Promise((resolve) => {
-      const request = indexedDB.open('linky-db', 1)
-      request.onupgradeneeded = () => {
-        request.result.createObjectStore('store')
-      }
-      request.onsuccess = () => {
-        const db = request.result
-        const tx = db.transaction('store', 'readwrite')
-        tx.objectStore('store').delete(name)
-        tx.oncomplete = () => resolve()
-      }
-      request.onerror = () => resolve()
-    })
-  }
-}
-
+import type { Analytics, AppLanguage, AppState, Background, DialogType, Profile, Settings, Shortcut } from '../types'
 
 const DEFAULT_PROFILE_ID = 'default'
 
@@ -101,9 +29,6 @@ function normalizeShortcut(input: Partial<Shortcut>): Shortcut {
     pinned: Boolean(input.pinned),
     clicks: Number(input.clicks ?? 0),
     createdAt: input.createdAt ?? Date.now(),
-    expiryDate: input.expiryDate,
-    status: input.status,
-    browser: input.browser,
   }
 }
 
@@ -128,27 +53,6 @@ const DEFAULT_SETTINGS: Settings = {
   audioVolume: 65,
   language: 'en' as AppLanguage,
   activeProfileId: DEFAULT_PROFILE_ID,
-  
-  // Upgrades
-  theme: 'neon' as AppTheme,
-  darkMode: true,
-  expiryReminders: true,
-  keyboardShortcuts: true,
-  browserSyncToken: Math.random().toString(36).slice(2, 10),
-  browserSyncPort: 49152,
-  splitViewEnabled: false,
-  splitViewProfileId: undefined,
-  categories: {
-    Daily: { name: 'Daily', emoji: '📅' },
-    AI: { name: 'AI', emoji: '🤖' },
-    Social: { name: 'Social', emoji: '💬' },
-    Career: { name: 'Career', emoji: '💼' },
-    Entertainment: { name: 'Entertainment', emoji: '🎮' },
-    Work: { name: 'Work', emoji: '💻' },
-    Study: { name: 'Study', emoji: '🎓' },
-    Shopping: { name: 'Shopping', emoji: '🛍️' },
-    General: { name: 'General', emoji: '🔗' },
-  },
 }
 
 const DEFAULT_BACKGROUND: Background = {
@@ -209,9 +113,6 @@ interface StoreState extends AppState, UIState {
   resetSettings: () => void
   setBackground: (bg: Background) => void
   resetBackground: () => void
-  checkBrokenLinks: () => Promise<void>
-  addCategory: (name: string, emoji: string, color?: string) => void
-  deleteCategory: (name: string) => void
 
   exportData: () => void
   exportCsvData: () => void
@@ -333,74 +234,6 @@ export const useStore = create<StoreState>()(
 
       resetBackground: () => set({ background: DEFAULT_BACKGROUND }),
 
-      checkBrokenLinks: async () => {
-        const { profiles, settings } = get()
-        const activeProfile = profiles.find((p) => p.id === settings.activeProfileId)
-        if (!activeProfile) return
-
-        set({
-          profiles: profiles.map((p) =>
-            p.id === settings.activeProfileId
-              ? { ...p, shortcuts: p.shortcuts.map((s) => ({ ...s, status: 'checking' as const })) }
-              : p
-          ),
-        })
-
-        for (const s of activeProfile.shortcuts) {
-          let isOk = false
-          try {
-            if ((window as any).linkyDesktop?.checkLink) {
-              isOk = await (window as any).linkyDesktop.checkLink(s.url)
-            } else {
-              const res = await fetch(s.url, { method: 'HEAD', mode: 'no-cors' })
-              isOk = true
-            }
-          } catch {
-            isOk = false
-          }
-          
-          set((state) => ({
-            profiles: state.profiles.map((p) =>
-              p.id === settings.activeProfileId
-                ? {
-                    ...p,
-                    shortcuts: p.shortcuts.map((shortcut) =>
-                      shortcut.id === s.id
-                        ? { ...shortcut, status: (isOk ? 'ok' : 'broken') as 'ok' | 'broken' }
-                        : shortcut
-                    ),
-                  }
-                : p
-            ),
-          }))
-        }
-      },
-
-      addCategory: (name, emoji, color) => {
-        const { settings } = get()
-        set({
-          settings: {
-            ...settings,
-            categories: {
-              ...settings.categories,
-              [name]: { name, emoji, color },
-            },
-          },
-        })
-      },
-
-      deleteCategory: (name) => {
-        const { settings } = get()
-        const newCats = { ...settings.categories }
-        delete newCats[name]
-        set({
-          settings: {
-            ...settings,
-            categories: newCats,
-          },
-        })
-      },
-
       openDialog: (d, shortcut) => set({ dialog: d, editingShortcut: shortcut ?? null }),
 
       openView: (shortcut) => set({ dialog: 'view-shortcut', viewingShortcut: shortcut }),
@@ -491,7 +324,6 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: 'linky_v2',
-      storage: customIndexedDBStorage,
       partialize: (s) => ({
         profiles:   s.profiles,
         settings:   s.settings,

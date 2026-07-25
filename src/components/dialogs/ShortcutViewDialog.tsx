@@ -1,9 +1,6 @@
-import { useState } from 'react'
 import { useStore } from '../../store/useStore'
 import { getFavicon, isValidUrl, normalizeUrl } from '../../utils/helpers'
 import { t } from '../../utils/i18n'
-import { apiClient } from '../../api/client'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 function MetaRow({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
@@ -30,56 +27,7 @@ export default function ShortcutViewDialog() {
   const deleteShortcut  = useStore((s) => s.deleteShortcut)
   const lang            = settings.language ?? 'en'
 
-  const [activeTab, setActiveTab] = useState<'details' | 'analytics'>('details')
-  const [analytics, setAnalytics] = useState<any>(null)
-  const [loadingAnalytics, setLoadingAnalytics] = useState(false)
-  const [qrCodeBlob, setQrCodeBlob] = useState<Blob | null>(null)
-  const [loadingQr, setLoadingQr] = useState(false)
-
   if (dialog !== 'view-shortcut' || !shortcut) return null
-
-  // Load analytics when switching to analytics tab and shortcut has public link
-  const hasPublicLink = !!shortcut.publicLinkId
-
-  async function loadAnalytics() {
-    if (!shortcut?.publicLinkId) return
-    try {
-      setLoadingAnalytics(true)
-      const data = await apiClient.getAnalytics(shortcut.publicLinkId)
-      setAnalytics(data)
-    } catch (err) {
-      console.error('Failed to load analytics:', err)
-    } finally {
-      setLoadingAnalytics(false)
-    }
-  }
-
-  async function loadQrCode() {
-    if (!shortcut?.publicLinkId || qrCodeBlob) return
-    try {
-      setLoadingQr(true)
-      const blob = await apiClient.getQRCode(shortcut.publicLinkId)
-      setQrCodeBlob(blob)
-    } catch (err) {
-      console.error('Failed to load QR code:', err)
-    } finally {
-      setLoadingQr(false)
-    }
-  }
-
-  function downloadQrCode() {
-    if (!qrCodeBlob || !shortcut) return
-    const url = URL.createObjectURL(qrCodeBlob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `linky-qr-${shortcut.name.replace(/\s+/g, '-').toLowerCase()}.png`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  if (activeTab === 'analytics' && !analytics && hasPublicLink) {
-    loadAnalytics()
-  }
 
   const iconSrc = shortcut.icon && isValidUrl(normalizeUrl(shortcut.icon))
     ? normalizeUrl(shortcut.icon)
@@ -188,161 +136,13 @@ export default function ShortcutViewDialog() {
           </div>
         )}
 
-        {/* ── Tab Navigation ── */}
-        <div className="relative z-10 flex gap-2 mb-4">
-          <button
-            onClick={() => setActiveTab('details')}
-            className="flex-1 py-2 text-sm font-medium rounded-lg transition-all"
-            style={{
-              background: activeTab === 'details' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'details' ? 'white' : 'rgba(255,255,255,0.6)',
-            }}
-          >
-            Details
-          </button>
-          {hasPublicLink && (
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className="flex-1 py-2 text-sm font-medium rounded-lg transition-all"
-              style={{
-                background: activeTab === 'analytics' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-                color: activeTab === 'analytics' ? 'white' : 'rgba(255,255,255,0.6)',
-              }}
-            >
-              Analytics
-            </button>
-          )}
+        {/* ── Meta grid ── */}
+        <div className="relative z-10 grid grid-cols-2 gap-2 mb-5">
+          <MetaRow icon="🗂" label={t(lang, 'group')} value={shortcut.group || 'General'} />
+          <MetaRow icon="🖱" label={t(lang, 'launches')} value={shortcut.clicks > 0 ? `${shortcut.clicks} ${t(lang, 'launches')}` : t(lang, 'notTracked')} />
+          <MetaRow icon="📅" label={t(lang, 'addedOn')} value={addedDate} />
+          <MetaRow icon="📌" label={t(lang, 'pinned')} value={shortcut.pinned ? t(lang, 'pin') : t(lang, 'unpin')} />
         </div>
-
-        {/* ── Details Tab ── */}
-        {activeTab === 'details' && (
-          <>
-            {/* ── Meta grid ── */}
-            <div className="relative z-10 grid grid-cols-2 gap-2 mb-5">
-              <MetaRow icon="🗂" label={t(lang, 'group')} value={shortcut.group || 'General'} />
-              <MetaRow icon="🖱" label={t(lang, 'launches')} value={shortcut.clicks > 0 ? `${shortcut.clicks} ${t(lang, 'launches')}` : t(lang, 'notTracked')} />
-              <MetaRow icon="📅" label={t(lang, 'addedOn')} value={addedDate} />
-              <MetaRow icon="📌" label={t(lang, 'pinned')} value={shortcut.pinned ? t(lang, 'pin') : t(lang, 'unpin')} />
-              {shortcut.browser && <MetaRow icon="🌐" label="Browser" value={shortcut.browser.toUpperCase()} />}
-              {shortcut.expiryDate && (
-                <MetaRow 
-                  icon="⏰" 
-                  label="Expiry" 
-                  value={new Date(shortcut.expiryDate).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }) + (shortcut.expiryDate < Date.now() ? ' (Expired)' : '')} 
-                />
-              )}
-              {hasPublicLink && <MetaRow icon="🔗" label="Public Link" value="Active" />}
-            </div>
-          </>
-        )}
-
-        {/* ── Analytics Tab ── */}
-        {activeTab === 'analytics' && hasPublicLink && (
-          <div className="relative z-10">
-            {loadingAnalytics ? (
-              <div className="text-center py-8 text-white/50">Loading analytics...</div>
-            ) : analytics ? (
-              <div className="flex flex-col gap-4">
-                {/* Total Clicks */}
-                <div className="rounded-xl px-4 py-3 text-center" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                  <p className="text-3xl font-bold text-white">{analytics.totalClicks}</p>
-                  <p className="text-xs text-white/50 uppercase tracking-wider">Total Clicks</p>
-                </div>
-
-                {/* QR Code */}
-                <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                  <p className="text-xs font-semibold text-white/70 mb-3">QR Code</p>
-                  {loadingQr ? (
-                    <div className="text-center py-4 text-white/50">Loading QR code...</div>
-                  ) : qrCodeBlob ? (
-                    <div className="flex flex-col items-center gap-3">
-                      <img 
-                        src={URL.createObjectURL(qrCodeBlob)} 
-                        alt="QR Code" 
-                        className="w-32 h-32 rounded-lg"
-                      />
-                      <button
-                        onClick={downloadQrCode}
-                        className="text-xs px-3 py-1.5 rounded-lg transition-all"
-                        style={{ background: 'var(--accent)', color: 'white' }}
-                      >
-                        Download QR Code
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={loadQrCode}
-                      className="text-xs px-3 py-1.5 rounded-lg transition-all w-full"
-                      style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}
-                    >
-                      Generate QR Code
-                    </button>
-                  )}
-                </div>
-
-                {/* Clicks Over Time Chart */}
-                {Object.keys(analytics.clicksOverTime).length > 0 && (
-                  <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                    <p className="text-xs font-semibold text-white/70 mb-3">Clicks Over Time</p>
-                    <ResponsiveContainer width="100%" height={150}>
-                      <LineChart data={Object.entries(analytics.clicksOverTime).map(([date, count]) => ({ date, count }))}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                        <XAxis 
-                          dataKey="date" 
-                          stroke="rgba(255,255,255,0.5)"
-                          fontSize={10}
-                          tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        />
-                        <YAxis stroke="rgba(255,255,255,0.5)" fontSize={10} />
-                        <Tooltip 
-                          contentStyle={{ background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                          labelStyle={{ color: 'white' }}
-                          itemStyle={{ color: 'var(--accent)' }}
-                        />
-                        <Line type="monotone" dataKey="count" stroke="var(--accent)" strokeWidth={2} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
-
-                {/* Referrers */}
-                {Object.keys(analytics.referrers).length > 0 && (
-                  <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                    <p className="text-xs font-semibold text-white/70 mb-3">Top Referrers</p>
-                    <div className="space-y-2">
-                      {Object.entries(analytics.referrers)
-                        .sort(([, a], [, b]) => (b as number) - (a as number))
-                        .slice(0, 5)
-                        .map(([referrer, count]) => (
-                          <div key={referrer} className="flex justify-between items-center">
-                            <span className="text-sm text-white/80">{referrer}</span>
-                            <span className="text-xs font-medium text-white/60">{String(count)}</span>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Devices */}
-                {Object.keys(analytics.devices).length > 0 && (
-                  <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                    <p className="text-xs font-semibold text-white/70 mb-3">Devices</p>
-                    <div className="space-y-2">
-                      {Object.entries(analytics.devices).map(([device, count]) => (
-                        <div key={device} className="flex justify-between items-center">
-                          <span className="text-sm text-white/80 capitalize">{device}</span>
-                          <span className="text-xs font-medium text-white/60">{String(count)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-white/50">No analytics data available</div>
-            )}
-          </div>
-        )}
 
         {/* ── Actions ── */}
         <div className="relative z-10 flex items-center gap-2">
