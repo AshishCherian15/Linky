@@ -15,6 +15,13 @@
 
 ---
 
+## 🚀 Get Linky
+
+- 🌐 **[Try it in your browser](https://short-cut-hub.vercel.app/)** — no installation needed
+- 💻 **[Download for Windows](https://github.com/AshishCherian15/Linky/releases/latest)** — installer, no coding required
+
+---
+
 ## Why local-first, on purpose
 
 Linky deliberately has **no backend and no cloud sync**. That's not a limitation — it's a design decision:
@@ -69,7 +76,7 @@ Linky/
 
 ---
 
-## 🚀 Getting Started (Web App)
+## 🚀 Getting Started (For Developers)
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) version 18 or higher installed on your computer
