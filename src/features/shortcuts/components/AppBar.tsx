@@ -1,6 +1,6 @@
-import { useStore } from '../store/useStore'
-import { getInitials } from '../utils/helpers'
-import { t } from '../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { getInitials } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
 
 /* ── Avatar component — renders photo, emoji, or initials ── */
 function Avatar({

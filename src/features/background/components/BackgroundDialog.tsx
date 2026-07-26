@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useStore } from '../../store/useStore'
-import { detectBgType, getYoutubeId, isValidUrl, normalizeBackgroundSrc } from '../../utils/helpers'
-import { t } from '../../utils/i18n'
-import type { Background, BackgroundType } from '../../types'
+import { useStore } from '../../../store/useStore'
+import { detectBgType, getYoutubeId, isValidUrl, normalizeBackgroundSrc } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
+import type { Background, BackgroundType } from '../../../types'
 
 type BgTab = 'presets' | 'url' | 'solid'
 

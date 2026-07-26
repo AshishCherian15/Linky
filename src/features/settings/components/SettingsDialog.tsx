@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
-import { useStore } from '../../store/useStore'
-import { fileToBase64, getInitials } from '../../utils/helpers'
-import { LANGUAGE_OPTIONS, t } from '../../utils/i18n'
-import type { CardStyle, GroupSort, SearchEngine, TileSize } from '../../types'
+import { useStore } from '../../../store/useStore'
+import { fileToBase64, getInitials } from '../../../lib/helpers'
+import { LANGUAGE_OPTIONS, t } from '../../../lib/i18n'
+import type { CardStyle, GroupSort, SearchEngine, TileSize } from '../../../types'
 
 type Tab = 'appearance' | 'behavior' | 'audio' | 'profile' | 'data'
 

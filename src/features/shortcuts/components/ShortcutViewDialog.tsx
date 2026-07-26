@@ -1,6 +1,6 @@
-import { useStore } from '../../store/useStore'
-import { getFavicon, isValidUrl, normalizeUrl } from '../../utils/helpers'
-import { t } from '../../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { getFavicon, isValidUrl, normalizeUrl } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
 
 function MetaRow({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (

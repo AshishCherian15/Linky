@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useStore } from '../../store/useStore'
-import { getFavicon, inferShortcutMeta, isValidUrl, normalizeUrl, safeText } from '../../utils/helpers'
-import { t } from '../../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { getFavicon, inferShortcutMeta, isValidUrl, normalizeUrl, safeText } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
 
 const QUICK_PICKS = [
   { name: 'YouTube',  url: 'https://youtube.com',         desc: 'Watch and share videos' },

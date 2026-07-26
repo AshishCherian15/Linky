@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { uid, exportCsv, importCsv } from '../utils/helpers'
+import { uid, exportCsv, importCsv } from '../lib/helpers'
 import type { Analytics, AppLanguage, AppState, Background, DialogType, Profile, Settings, Shortcut } from '../types'
 
 const DEFAULT_PROFILE_ID = 'default'

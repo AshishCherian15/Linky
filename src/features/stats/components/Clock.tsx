@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useStore } from '../store/useStore'
-import { t } from '../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { t } from '../../../lib/i18n'
 
 export default function Clock() {
   const showClock = useStore((s) => s.settings.showClock)

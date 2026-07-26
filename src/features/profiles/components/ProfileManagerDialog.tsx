@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
-import { useStore } from '../../store/useStore'
-import { fileToBase64, getInitials } from '../../utils/helpers'
-import { t } from '../../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { fileToBase64, getInitials } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
 
 const EMOJIS = ['🏠','💼','🎓','🎮','🎨','🚀','❤️','🌍','🔬','💡','🎵','🏋️','🌙','☀️','🎯']
 

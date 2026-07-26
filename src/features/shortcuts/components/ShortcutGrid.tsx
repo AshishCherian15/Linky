@@ -4,10 +4,10 @@ import {
   useSensor, useSensors, type DragEndEvent,
 } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
-import { useStore } from '../store/useStore'
+import { useStore } from '../../../store/useStore'
 import ShortcutCard from './ShortcutCard'
-import type { Shortcut } from '../types'
-import { t } from '../utils/i18n'
+import type { Shortcut } from '../../../types'
+import { t } from '../../../lib/i18n'
 
 export default function ShortcutGrid() {
   const activeProfile    = useStore((s) => s.activeProfile)

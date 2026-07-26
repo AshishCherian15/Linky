@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { useStore } from '../store/useStore'
-import { buildYoutubeEmbed } from '../utils/helpers'
+import { useStore } from '../../../store/useStore'
+import { buildYoutubeEmbed } from '../../../lib/helpers'
 
 export default function Background() {
   const background = useStore((s) => s.background)

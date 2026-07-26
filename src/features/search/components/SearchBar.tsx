@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useStore } from '../store/useStore'
-import { getSearchUrl } from '../utils/helpers'
-import { t } from '../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { getSearchUrl } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
 
 const ENGINE_ICONS: Record<string, string> = {
   google:     'G',

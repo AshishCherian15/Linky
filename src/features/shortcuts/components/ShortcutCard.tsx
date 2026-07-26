@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useStore } from '../store/useStore'
-import { getFavicon, isValidUrl, normalizeUrl } from '../utils/helpers'
-import { t } from '../utils/i18n'
-import type { Shortcut } from '../types'
+import { useStore } from '../../../store/useStore'
+import { getFavicon, isValidUrl, normalizeUrl } from '../../../lib/helpers'
+import { t } from '../../../lib/i18n'
+import type { Shortcut } from '../../../types'
 
 interface Props { shortcut: Shortcut }
 

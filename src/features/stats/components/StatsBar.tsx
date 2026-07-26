@@ -1,5 +1,5 @@
-import { useStore } from '../store/useStore'
-import { t } from '../utils/i18n'
+import { useStore } from '../../../store/useStore'
+import { t } from '../../../lib/i18n'
 
 function Sparkline({ values }: { values: number[] }) {
   if (!values.length) return null
