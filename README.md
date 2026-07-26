@@ -17,7 +17,7 @@
 
 ## 🚀 Get Linky
 
-- 🌐 **[Try it in your browser](https://short-cut-hub.vercel.app/)** — no installation needed
+- 🌐 **[Try it in your browser](https://linky.vercel.app/)** — no installation needed
 - 💻 **[Download for Windows](https://github.com/AshishCherian15/Linky/releases/latest)** — installer, no coding required
 
 ---
