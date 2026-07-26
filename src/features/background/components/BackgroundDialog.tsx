@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../../../store/useStore'
 import { detectBgType, getYoutubeId, isValidUrl, normalizeBackgroundSrc } from '../../../lib/helpers'
 import { t } from '../../../lib/i18n'
+import { showToast } from '../../../components/ui/Toast'
 import type { Background, BackgroundType } from '../../../types'
 
 type BgTab = 'presets' | 'url' | 'solid'
@@ -50,6 +51,7 @@ export default function BackgroundDialog() {
 
   function applyPreset(p: typeof PRESETS[0]) {
     setBackground({ type: p.type, src: p.src, sourceKind: 'url' })
+    showToast(`${p.label} background applied`, 'success')
     closeDialog()
   }
 
@@ -57,6 +59,7 @@ export default function BackgroundDialog() {
     const f = e.target.files?.[0]; if (!f) return
     const ftype: BackgroundType = f.type.startsWith('video/') ? 'video' : 'image'
     setBackground({ type: ftype, src: URL.createObjectURL(f), sourceKind: 'upload' })
+    showToast('Custom background applied', 'success')
     closeDialog()
   }
 
@@ -68,6 +71,7 @@ export default function BackgroundDialog() {
     const resolved: BackgroundType = urlType === 'auto' ? detectBgType(norm) : urlType as BackgroundType
     if (resolved === 'youtube' && !getYoutubeId(norm)) return setError('Could not find a YouTube video ID.')
     setBackground({ type: resolved, src: norm, sourceKind: 'url' })
+    showToast('Background updated', 'success')
     closeDialog()
   }
 
@@ -76,6 +80,7 @@ export default function BackgroundDialog() {
       ? { type: 'none', src: '', sourceKind: 'url', bgGradient: `linear-gradient(${gradAngle}deg, ${gradFrom}, ${gradTo})` }
       : { type: 'none', src: '', sourceKind: 'url', bgColor: solidColor }
     setBackground(bg)
+    showToast('Background updated', 'success')
     closeDialog()
   }
 

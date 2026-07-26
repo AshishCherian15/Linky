@@ -8,6 +8,7 @@ import SearchBar         from '../features/search/components/SearchBar'
 import StatsBar          from '../features/stats/components/StatsBar'
 import ShortcutGrid      from '../features/shortcuts/components/ShortcutGrid'
 import CommandPalette    from '../features/search/components/CommandPalette'
+import ToastContainer    from '../components/ui/Toast'
 
 import WelcomeDialog        from '../features/shortcuts/components/WelcomeDialog'
 import ShortcutDialog       from '../features/shortcuts/components/ShortcutDialog'
@@ -121,6 +122,7 @@ export default function App() {
       <ProfileManagerDialog />
       <ShortcutViewDialog />
       <CommandPalette />
+      <ToastContainer />
     </>
   )
 }

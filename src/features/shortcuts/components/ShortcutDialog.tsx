@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../../../store/useStore'
 import { getFavicon, inferShortcutMeta, isValidUrl, normalizeUrl, safeText } from '../../../lib/helpers'
 import { t } from '../../../lib/i18n'
+import { showToast } from '../../../components/ui/Toast'
 
 const QUICK_PICKS = [
   { name: 'YouTube',  url: 'https://youtube.com',         desc: 'Watch and share videos' },
@@ -85,8 +86,10 @@ export default function ShortcutDialog() {
     if (ic && !isValidUrl(ic)) return setError(`${t(language, 'customIconUrl')} is not valid.`)
     if (isEdit && editingShortcut) {
       updateShortcut(editingShortcut.id, { name: n, url: u, group: g, tags, icon: ic, description: d })
+      showToast(`${n} updated`, 'success')
     } else {
       addShortcut({ name: n, url: u, group: g, tags, icon: ic, description: d, pinned: false })
+      showToast(`${n} added`, 'success')
     }
     closeDialog()
   }

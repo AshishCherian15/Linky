@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useStore } from '../../../store/useStore'
 import { getFavicon, isValidUrl, normalizeUrl } from '../../../lib/helpers'
 import { t } from '../../../lib/i18n'
+import { showToast } from '../../../components/ui/Toast'
 import type { Shortcut } from '../../../types'
 
 interface Props { shortcut: Shortcut }
@@ -146,7 +147,10 @@ export default function ShortcutCard({ shortcut }: Props) {
 
         {/* Pin */}
         {settings.editMode && (
-          <ActionBtn onClick={stop(() => togglePin(shortcut.id))} title={shortcut.pinned ? 'Unpin' : 'Pin'}
+          <ActionBtn onClick={stop(() => {
+            togglePin(shortcut.id)
+            showToast(shortcut.pinned ? 'Unpinned' : 'Pinned', 'info')
+          })} title={shortcut.pinned ? 'Unpin' : 'Pin'}
             accent={shortcut.pinned}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill={shortcut.pinned ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -170,6 +174,7 @@ export default function ShortcutCard({ shortcut }: Props) {
               const confirmText = t(lang, 'deleteConfirm').replace('{name}', shortcut.name)
               if (settings.confirmDelete && !confirm(confirmText)) return
               deleteShortcut(shortcut.id)
+              showToast(`${shortcut.name} deleted`, 'success')
             })}
             title={t(lang, 'delete')}
             danger
