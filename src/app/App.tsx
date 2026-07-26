@@ -7,6 +7,7 @@ import Clock             from '../features/stats/components/Clock'
 import SearchBar         from '../features/search/components/SearchBar'
 import StatsBar          from '../features/stats/components/StatsBar'
 import ShortcutGrid      from '../features/shortcuts/components/ShortcutGrid'
+import CommandPalette    from '../features/search/components/CommandPalette'
 
 import WelcomeDialog        from '../features/shortcuts/components/WelcomeDialog'
 import ShortcutDialog       from '../features/shortcuts/components/ShortcutDialog'
@@ -48,6 +49,12 @@ export default function App() {
       const busy = tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'
       if (busy) return
       if (e.key === 'n' && !e.ctrlKey && !e.metaKey) openDialog('add-shortcut')
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault()
+        // Focus search bar - we'll need to add a ref to SearchBar
+        const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement
+        if (searchInput) searchInput.focus()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -55,7 +62,8 @@ export default function App() {
 
   const lang = language ?? 'en'
   const tips = [
-    ['/', t(lang, 'tipSearch')],
+    ['Cmd+K', t(lang, 'tipSearch') || 'Command palette'],
+    ['/', t(lang, 'tipSearch') || 'Focus search'],
     ['n', t(lang, 'tipAdd')],
     ['drag', t(lang, 'tipDrag')],
     ['hover', t(lang, 'tipHover')],
@@ -112,6 +120,7 @@ export default function App() {
       <SettingsDialog />
       <ProfileManagerDialog />
       <ShortcutViewDialog />
+      <CommandPalette />
     </>
   )
 }
