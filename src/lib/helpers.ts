@@ -71,15 +71,16 @@ export function getYoutubeId(url: string): string {
   return ''
 }
 
-export function buildYoutubeEmbed(bg: Background, muted: boolean): string {
+export function buildYoutubeEmbed(bg: Background): string {
   const id = getYoutubeId(bg.src)
   if (!id) return ''
-  const m = muted ? '1' : '0'
+  // Always use mute=1 for autoplay to work (browser policy)
+  // User can unmute via the toggle button
   const origin =
     window.location.origin && window.location.origin !== 'null'
       ? `&origin=${encodeURIComponent(window.location.origin)}`
       : ''
-  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=${m}&controls=0&loop=1&playlist=${id}&playsinline=1&enablejsapi=1&rel=0&modestbranding=1${origin}`
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&playsinline=1&enablejsapi=1&rel=0&modestbranding=1${origin}`
 }
 
 export function getInitials(name: string): string {
