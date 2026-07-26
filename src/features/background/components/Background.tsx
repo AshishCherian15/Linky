@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../../../store/useStore'
-import { buildYoutubeEmbed } from '../../../lib/helpers'
+import { getYoutubeId } from '../../../lib/helpers'
 
 export default function Background() {
   const background = useStore((s) => s.background)
   const settings   = useStore((s) => s.settings)
   const updateSettings = useStore((s) => s.updateSettings)
   const videoRef   = useRef<HTMLVideoElement>(null)
+  const youtubeContainerRef = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<any>(null)
   const [showAudioToggle, setShowAudioToggle] = useState(false)
 
   const muted  = !settings.bgAudio || settings.bgMuted
   const volume = settings.audioVolume / 100
+
+  // ── Load YouTube API script once, globally ─────────────────────────
+  useEffect(() => {
+    if (document.getElementById('youtube-iframe-api')) return
+    const tag = document.createElement('script')
+    tag.id = 'youtube-iframe-api'
+    tag.src = 'https://www.youtube.com/iframe_api'
+    document.head.appendChild(tag)
+  }, [])
 
   // Show audio toggle for video/YouTube backgrounds
   useEffect(() => {
@@ -71,9 +82,68 @@ export default function Background() {
     }
   }, [background.type])
 
-  const youtubeUrl = background.type === 'youtube'
-    ? buildYoutubeEmbed(background)
-    : ''
+  // ── YouTube player creation and management ─────────────────────────
+  useEffect(() => {
+    if (background.type !== 'youtube') return
+    const videoId = getYoutubeId(background.src)
+    if (!videoId) return
+
+    function createPlayer() {
+      playerRef.current = new (window as any).YT.Player(youtubeContainerRef.current, {
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          mute: 1,             // must start muted for autoplay to be allowed
+          controls: 0,
+          disablekb: 1,
+          modestbranding: 1,
+          rel: 0,
+          playsinline: 1,
+          // NOTE: no `loop` / `playlist` params here — looping is handled
+          // via onStateChange below instead, which avoids registering a
+          // "queue" with the browser's Media Session (that's what was
+          // causing the skip forward/backward UI)
+        },
+        events: {
+          onReady: (e: any) => {
+            e.target.setVolume(volume * 100)
+            if (!muted) e.target.unMute()
+          },
+          onStateChange: (e: any) => {
+            // Loop manually instead of via the playlist trick
+            if (e.data === (window as any).YT.PlayerState.ENDED) {
+              e.target.seekTo(0)
+              e.target.playVideo()
+            }
+          },
+        },
+      })
+    }
+
+    if ((window as any).YT && (window as any).YT.Player) {
+      createPlayer()
+    } else {
+      // API script not loaded yet — queue creation for when it's ready
+      (window as any).onYouTubeIframeAPIReady = createPlayer
+    }
+
+    return () => {
+      playerRef.current?.destroy?.()
+      playerRef.current = null
+    }
+  }, [background.type, background.src, muted, volume])
+
+  // ── Wire mute toggle to YouTube player ───────────────────────────────
+  useEffect(() => {
+    const player = playerRef.current
+    if (!player || background.type !== 'youtube') return
+    if (muted) {
+      player.mute?.()
+    } else {
+      player.unMute?.()
+      player.setVolume?.(volume * 100)
+    }
+  }, [muted, volume, background.type])
 
   function toggleAudio() {
     updateSettings({ bgMuted: !settings.bgMuted })
@@ -106,14 +176,8 @@ export default function Background() {
       )}
 
       {/* ── YouTube background (only rendered when active) ── */}
-      {background.type === 'youtube' && youtubeUrl && (
-        <iframe
-          key={background.src}
-          id="bg-youtube"
-          title="Background video"
-          src={youtubeUrl}
-          allow="autoplay; encrypted-media"
-        />
+      {background.type === 'youtube' && (
+        <div id="bg-youtube" ref={youtubeContainerRef} />
       )}
 
       {/* ── Solid / Gradient background (only rendered when active) ── */}
