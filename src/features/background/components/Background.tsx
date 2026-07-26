@@ -131,7 +131,7 @@ export default function Background() {
       playerRef.current?.destroy?.()
       playerRef.current = null
     }
-  }, [background.type, background.src, muted, volume])
+  }, [background.type, background.src])
 
   // ── Wire mute toggle to YouTube player ───────────────────────────────
   useEffect(() => {
